@@ -1,0 +1,62 @@
+@import "tailwindcss";
+
+body {
+    font-family: "Montserrat", sans-serif;
+
+}
+
+
+
+@theme {
+    --font-roboto: "Roboto Slab", serif;
+    --color-mainColor: #053024;
+    --color-subColor: #fdc97d;
+    --color-textColor: #333333;
+    --color-hover: #d0a73c;
+    --color-price: #d31100;
+
+    --color-primaryBg: #f1e8d7
+}
+
+/* Animation CSS Bell */
+@keyframes bellSwing {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(0deg);
+    }
+
+    75% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
+
+    40% {
+        transform: rotate(12deg);
+    }
+
+    45% {
+        transform: rotate(-12deg);
+    }
+
+    55% {
+        transform: rotate(8deg);
+    }
+
+    60% {
+        transform: rotate(-8deg);
+    }
+}
+
+
+
+.notification--bell {
+    animation: bellSwing 2.2s infinite linear;
+    /* transform-origin: center bottom; */
+    transform-origin: 50% 0;
+}
