@@ -1,6 +1,6 @@
 <template>
   <div class="pb-8">
-    <div class="px-[7px] lg:px-11 xl:px-30 relative">
+    <div class="relative">
       <div class="bg-white bg-container relative p-1">
         <div class="wire-left relative"></div>
         <div class="wire-right relative"></div>

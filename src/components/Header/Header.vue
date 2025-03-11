@@ -77,7 +77,7 @@
     </div>
     <!-- body -->
     <div
-      class="bg-[#126644] py-[8px]"
+      class="bg-[rgb(18,102,68)] py-[8px]"
       style="background-image: url('/images/header/header_pattent.webp')"
     >
       <div class="grid grid-cols-12 px-[7px] lg:px-11 xl:px-30 gap-4 items-center">

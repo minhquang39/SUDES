@@ -1,6 +1,6 @@
 <template>
   <!-- Menu -->
-  <div class="absolute w-[75vw] h-full top-0 left-0 bg-white flex flex-col shadow-lg">
+  <div class="absolute w-[75vw] h-full top-0 left-0 bg-white flex flex-col shadow-lg z-[999]">
     <!-- top  -->
     <div class="flex w-full bg-[#004e3e] p-3 px-12 justify-between">
       <span

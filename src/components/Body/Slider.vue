@@ -24,6 +24,17 @@
       <div class="custom-progress-bar" ref="progressBar"></div>
     </div>
 
+    <!-- Custom pagination -->
+    <div class="custom-pagination">
+      <span
+        v-for="(slide, index) in slideImages"
+        :key="`dot-${index}`"
+        class="pagination-dot"
+        :class="{ active: activeIndex === index }"
+        @click="goToSlide(index)"
+      ></span>
+    </div>
+
     <!-- Custom navigation buttons with disabled state -->
     <div class="custom-nav-prev" :class="{ 'nav-disabled': isBeginning }" @click="prevSlide">
       <div class="border-2 border-white h-5 w-5 flex items-center justify-center">
@@ -96,7 +107,18 @@ export default {
       }
     }
 
+    const activeIndex = ref(0)
+
+    const goToSlide = (index) => {
+      if (swiper.value) {
+        swiper.value.slideTo(index)
+      }
+    }
+
     const handleSlideChange = () => {
+      if (swiper.value) {
+        activeIndex.value = swiper.value.activeIndex
+      }
       startProgressBar()
       updateNavState() // Cập nhật trạng thái nút khi slide thay đổi
     }
@@ -133,6 +155,8 @@ export default {
       isBeginning,
       isEnd,
       updateNavState,
+      activeIndex,
+      goToSlide,
     }
   },
 }
@@ -238,6 +262,33 @@ export default {
   background-color: #053024;
   opacity: 0.3;
 }
+
+/* Custom pagination styling */
+.custom-pagination {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 16px;
+  z-index: 20;
+}
+
+.pagination-dot {
+  width: 10px;
+  height: 10px;
+  background-color: transparent;
+  border: 1px solid #fff;
+  transform: rotate(45deg);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.pagination-dot.active {
+  background-color: #053024;
+  transform: rotate(45deg);
+}
+
 @media screen and (max-width: 640px) {
   .custom-nav-prev,
   .custom-nav-next {
