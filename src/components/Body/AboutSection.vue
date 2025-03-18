@@ -8,7 +8,7 @@
       background-size: cover;
     "
   >
-    <div class="md:grid md:grid-cols-2 px-[7px] md:px-[45px]">
+    <div class="md:grid md:grid-cols-2 px-[7px] md:px-[45px] xl:px-30">
       <div class="text-center px-[20px] py-[28px] relative content">
         <TextMontserrat content="Yến sào sudes net" color="white" size="18" />
         <TextRoboto content="Câu chuyện về sudes net" color="#fdc97d" />

@@ -5,30 +5,23 @@
     <GiftSection />
     <AboutSection />
     <WhyChoiseSection />
+    <FeedBackSection />
     <BrandSection />
   </div>
 </template>
 
-<script>
-import Slider from '@/components/Body/Slider.vue'
-import ServiceSection from '@/components/Body/ServiceSection.vue'
-import TwoSquareSeperate from '@/components/Icon/TwoSquareSeperate.vue'
-import AboutSection from '@/components/Body/AboutSection.vue'
-import GiftSection from '@/components/Body/GiftSection.vue'
-import WhyChoiseSection from '@/components/Body/WhyChoiseSection.vue'
-import BrandSection from '@/components/Body/BrandSection.vue'
-export default {
-  components: {
-    Slider,
-    ServiceSection,
-    TwoSquareSeperate,
-    GiftSection,
-    AboutSection,
-    WhyChoiseSection,
-    BrandSection,
-  },
-  setup() {
-    return {}
-  },
-}
+<script setup>
+import { defineAsyncComponent } from 'vue'
+
+// Lazy load components
+const Slider = defineAsyncComponent(() => import('@/components/Body/Slider.vue'))
+const ServiceSection = defineAsyncComponent(() => import('@/components/Body/ServiceSection.vue'))
+
+const AboutSection = defineAsyncComponent(() => import('@/components/Body/AboutSection.vue'))
+const GiftSection = defineAsyncComponent(() => import('@/components/Body/GiftSection.vue'))
+const WhyChoiseSection = defineAsyncComponent(
+  () => import('@/components/Body/WhyChoiseSection.vue'),
+)
+const BrandSection = defineAsyncComponent(() => import('@/components/Body/BrandSection.vue'))
+const FeedBackSection = defineAsyncComponent(() => import('@/components/Body/FeedBackSection.vue'))
 </script>

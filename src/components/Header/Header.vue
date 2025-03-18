@@ -100,41 +100,7 @@
               <MapPinIcon class="size-7" />
               <span class="text-[10px] hidden md:inline">Cửa hàng</span>
             </div>
-            <div
-              class="opacity-100 flex relative user-icon"
-              @click.stop="isOpenUserMenu = !isOpenUserMenu"
-            >
-              <div>
-                <UserIcon class="size-7" />
-                <span class="text-[10px] hidden md:inline">Tài khoản</span>
-              </div>
-              <div class="absolute -right-2 lg:right-0 top-1/4">
-                <ChevronDownIcon class="size-4" />
-              </div>
-              <!--  -->
-              <div
-                class="absolute w-max text-sm bg-white text-black p-3 top-[calc(100%+16px)] right-0 z-[999] user-menu"
-                v-show="isOpenUserMenu"
-              >
-                <router-link
-                  to="/account/login"
-                  class="flex items-center gap-2 hover:bg-mainColor hover:text-white rounded pl-2 pr-16 py-1 cursor-pointer"
-                  @click.stop="isOpenUserMenu = false"
-                >
-                  <ArrowRightStartOnRectangleIcon class="size-5" />
-                  Đăng nhập
-                </router-link>
-
-                <router-link
-                  to="/account/register"
-                  class="flex items-center gap-2 hover:bg-mainColor hover:text-white rounded pl-2 pr-16 py-1 cursor-pointer"
-                  @click.stop="isOpenUserMenu = false"
-                >
-                  <UserPlusIcon class="size-5" />
-                  Đăng ký
-                </router-link>
-              </div>
-            </div>
+            <User />
             <div class="opacity-100 hover:opacity-75">
               <ShoppingCartIcon class="size-7" />
               <span class="text-[10px] hidden md:inline">Giỏ hàng</span>
@@ -166,20 +132,13 @@
 </template>
 
 <script>
-import { ref, watch, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import SearchBar from './SearchBar.vue'
 import NavBar from './NavBar.vue'
 import NavBarMobile from './NavBarMobile.vue'
 import { useRouter, useRoute } from 'vue-router'
-import {
-  MapPinIcon,
-  UserIcon,
-  ChevronDownIcon,
-  ShoppingCartIcon,
-  UserPlusIcon,
-  ArrowRightStartOnRectangleIcon,
-  Bars3Icon,
-} from '@heroicons/vue/24/solid'
+import User from './User.vue'
+import { MapPinIcon, ChevronDownIcon, ShoppingCartIcon, Bars3Icon } from '@heroicons/vue/24/solid'
 
 export default {
   components: {
@@ -187,12 +146,12 @@ export default {
     NavBar,
     NavBarMobile,
     MapPinIcon,
-    UserIcon,
+
     ChevronDownIcon,
     ShoppingCartIcon,
-    UserPlusIcon,
-    ArrowRightStartOnRectangleIcon,
+
     Bars3Icon,
+    User,
   },
   setup() {
     const router = useRouter()
@@ -206,19 +165,8 @@ export default {
     const current = ref(0)
     let intervalId = null
     const isBlinking = ref(false)
-    const isOpenUserMenu = ref(false)
 
     // Thêm xử lý click outside
-    const handleClickOutside = (event) => {
-      const userMenu = document.querySelector('.user-menu')
-      const userIcon = document.querySelector('.user-icon')
-
-      if (isOpenUserMenu.value && userMenu && userIcon) {
-        if (!userMenu.contains(event.target) && !userIcon.contains(event.target)) {
-          isOpenUserMenu.value = false
-        }
-      }
-    }
 
     onMounted(() => {
       intervalId = setInterval(() => {
@@ -232,18 +180,12 @@ export default {
           isBlinking.value = false
         }, 5000)
       }, 3000)
-
-      // Thêm event listener cho click outside
-      document.addEventListener('click', handleClickOutside)
     })
 
     onUnmounted(() => {
       if (intervalId) {
         clearInterval(intervalId)
       }
-
-      // Clean up event listener
-      document.removeEventListener('click', handleClickOutside)
     })
 
     return {
@@ -253,7 +195,6 @@ export default {
       isMenuOpen,
       router,
       route,
-      isOpenUserMenu,
     }
   },
 }
