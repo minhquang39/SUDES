@@ -1,0 +1,118 @@
+/* Fade transitions */
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+}
+
+/* Slide transitions */
+.slide-fade-enter-active {
+    transition: all 0.3s ease-out;
+}
+
+.slide-fade-leave-active {
+    transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+    transform: translateX(20px);
+    opacity: 0;
+}
+
+/* Scale transitions */
+.scale-enter-active,
+.scale-leave-active {
+    transition: all 0.3s ease;
+}
+
+.scale-enter-from,
+.scale-leave-to {
+    transform: scale(0.95);
+    opacity: 0;
+}
+
+/* List transitions */
+.list-enter-active,
+.list-leave-active {
+    transition: all 0.3s ease;
+}
+
+.list-enter-from,
+.list-leave-to {
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+/* Page transitions */
+.page-enter-active,
+.page-leave-active {
+    transition: all 0.3s ease;
+}
+
+.page-enter-from {
+    opacity: 0;
+    transform: translateX(-20px);
+}
+
+.page-leave-to {
+    opacity: 0;
+    transform: translateX(20px);
+}
+
+/* Loading animations */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Hover effects */
+.hover-lift {
+    transition: transform 0.2s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-2px);
+}
+
+/* Button animations */
+.btn-scale {
+    transition: transform 0.2s ease;
+}
+
+.btn-scale:active {
+    transform: scale(0.95);
+}
+
+/* Toast animations */
+.toast-enter-active,
+.toast-leave-active {
+    transition: all 0.3s ease;
+}
+
+.toast-enter-from {
+    transform: translateX(100%);
+    opacity: 0;
+}
+
+.toast-leave-to {
+    transform: translateX(100%);
+    opacity: 0;
+}

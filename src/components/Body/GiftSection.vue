@@ -1,6 +1,6 @@
 <template>
   <div class="text-center">
-    <TextMontserrat color="#053024" size="20" content="Yến sào sudes net" />
+    <TextMontserrat color="#053024" :size="20" content="Yến sào sudes net" />
     <TextRoboto color="#053024" content="Bộ sưu tập quà tặng cao cấp" />
     <div class="max-w-[760px] m-auto pt-3 text-sm lg:text-[16px] text-[#333]">
       Bộ quà tặng Sudes Nest là giải pháp quà Tết, quà Trung Thu, quà tặng doanh nghiệp,.. được lựa
@@ -8,7 +8,7 @@
       chặt gắn kết.
     </div>
     <div class="py-6">
-      <TwoSquareSeperate color="#053024" size="10" />
+      <TwoSquareSeperate color="#053024" :size="10" />
     </div>
     <!--  -->
     <div class="">
@@ -18,8 +18,8 @@
           <div class="overflow-hidden">
             <img
               class="group-hover:scale-105 w-full aspect-[382/574] object-cover transition duration-300"
-              src="https://bizweb.dktcdn.net/100/506/650/themes/944598/assets/img_4banner_1.jpg?1739018973665"
               loading="lazy"
+              src="https://bizweb.dktcdn.net/100/506/650/themes/944598/assets/img_4banner_1.jpg?1739018973665"
               alt="Bộ quà 4 mùa"
             />
           </div>
@@ -33,8 +33,8 @@
           <div class="overflow-hidden">
             <img
               class="group-hover:scale-105 w-full aspect-[382/574] object-cover transition duration-300"
-              src="https://bizweb.dktcdn.net/100/506/650/themes/944598/assets/img_4banner_2.jpg?1739018973665"
               loading="lazy"
+              src="https://bizweb.dktcdn.net/100/506/650/themes/944598/assets/img_4banner_2.jpg?1739018973665"
               alt="Bộ quà 4 mùa"
             />
           </div>
@@ -48,8 +48,8 @@
           <div class="overflow-hidden">
             <img
               class="group-hover:scale-105 w-full aspect-[382/574] object-cover transition duration-300"
-              src="https://bizweb.dktcdn.net/100/506/650/themes/944598/assets/img_4banner_3.jpg?1739018973665"
               loading="lazy"
+              src="https://bizweb.dktcdn.net/100/506/650/themes/944598/assets/img_4banner_3.jpg?1739018973665"
               alt="Bộ quà 4 mùa"
             />
           </div>
@@ -63,8 +63,8 @@
           <div class="overflow-hidden">
             <img
               class="group-hover:scale-105 w-full aspect-[382/574] object-cover transition duration-300"
-              src="https://bizweb.dktcdn.net/100/506/650/themes/944598/assets/img_4banner_4.jpg?1739018973665"
               loading="lazy"
+              src="https://bizweb.dktcdn.net/100/506/650/themes/944598/assets/img_4banner_4.jpg?1739018973665"
               alt="Bộ quà 4 mùa"
             />
           </div>
@@ -83,14 +83,15 @@
             <picture>
               <source
                 media="(max-width: 480px)"
+                loading="lazy"
                 srcset="
                   https://bizweb.dktcdn.net/thumb/large/100/506/650/themes/944598/assets/img_4banner_1.jpg?1739018973665
                 "
               />
               <img
                 class="group-hover:scale-105 w-full aspect-[382/574] object-cover transition duration-300"
-                src="https://bizweb.dktcdn.net/100/506/650/themes/944598/assets/img_4banner_1.jpg?1739018973665"
                 loading="lazy"
+                src="https://bizweb.dktcdn.net/100/506/650/themes/944598/assets/img_4banner_1.jpg?1739018973665"
                 alt="Bộ quà 4 mùa"
               />
             </picture>
@@ -105,8 +106,8 @@
           <div class="overflow-hidden">
             <img
               class="group-hover:scale-105 w-full aspect-[382/574] object-cover transition duration-300"
-              src="https://bizweb.dktcdn.net/thumb/large/100/506/650/themes/944598/assets/img_4banner_2.jpg?1739018973665"
               loading="lazy"
+              src="https://bizweb.dktcdn.net/thumb/large/100/506/650/themes/944598/assets/img_4banner_2.jpg?1739018973665"
               alt="Bộ quà 4 mùa"
             />
           </div>
@@ -120,8 +121,8 @@
           <div class="overflow-hidden">
             <img
               class="group-hover:scale-105 w-full aspect-[382/574] object-cover transition duration-300"
-              src="https://bizweb.dktcdn.net/thumb/large/100/506/650/themes/944598/assets/img_4banner_3.jpg?1739018973665"
               loading="lazy"
+              src="https://bizweb.dktcdn.net/thumb/large/100/506/650/themes/944598/assets/img_4banner_3.jpg?1739018973665"
               alt="Bộ quà 4 mùa"
             />
           </div>
@@ -135,8 +136,8 @@
           <div class="overflow-hidden">
             <img
               class="group-hover:scale-105 w-full aspect-[382/574] object-cover transition duration-300"
-              src="https://bizweb.dktcdn.net/thumb/large/100/506/650/themes/944598/assets/img_4banner_4.jpg?1739018973665"
               loading="lazy"
+              src="https://bizweb.dktcdn.net/thumb/large/100/506/650/themes/944598/assets/img_4banner_4.jpg?1739018973665"
               alt="Bộ quà 4 mùa"
             />
           </div>

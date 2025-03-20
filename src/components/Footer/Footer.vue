@@ -7,7 +7,9 @@
     <div class="py-[60px]">
       <div class="px-3 md:px-10 grid grid-cols-12">
         <div class="col-span-12 md:col-span-3 px=[10px]">
-          <img src="/images/header/logo.webp" alt="" width="200" height="70" />
+          <div class="flex items-center mb-4">
+            <img loading="lazy" src="/images/header/logo.webp" alt="Logo" width="200" height="70" />
+          </div>
           <div class="flex my-3 gap-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -62,24 +64,29 @@
           </div>
           <div class="flex gap-3 mt-7">
             <img
+              loading="lazy"
               src="https://bizweb.dktcdn.net/100/506/650/themes/944598/assets/facebook_2.svg?1739018973665"
               alt=""
             />
             <img
+              loading="lazy"
               src="https://bizweb.dktcdn.net/100/506/650/themes/944598/assets/instagram_1.svg?1739018973665"
               alt=""
             />
             <img
+              loading="lazy"
               src="https://bizweb.dktcdn.net/100/506/650/themes/944598/assets/shopee.svg?1739018973665"
               alt=""
             />
             <img
+              loading="lazy"
               src="https://bizweb.dktcdn.net/100/506/650/themes/944598/assets/lazada.svg?1739018973665"
               width="35"
               height="35"
               alt=""
             />
             <img
+              loading="lazy"
               src="https://bizweb.dktcdn.net/100/506/650/themes/944598/assets/tiktok.svg?1739018973665"
               alt=""
             />
@@ -155,44 +162,44 @@
             </h3>
           </div>
           <div class="mb-8">
-            <div class="flex gap-2 mb-2">
+            <div class="flex space-x-2">
               <img
+                loading="lazy"
                 src="https://bizweb.dktcdn.net/100/506/650/themes/944598/assets/payment_1.png?1739018973665"
-                alt=""
-                width="70"
-                height="20"
+                alt="Payment 1"
+                class="h-8"
               />
               <img
+                loading="lazy"
                 src="https://bizweb.dktcdn.net/100/506/650/themes/944598/assets/payment_2.png?1739018973665"
-                alt=""
-                width="70"
-                height="20"
+                alt="Payment 2"
+                class="h-8"
               />
               <img
+                loading="lazy"
                 src="https://bizweb.dktcdn.net/100/506/650/themes/944598/assets/payment_3.png?1739018973665"
-                alt=""
-                width="70"
-                height="20"
+                alt="Payment 3"
+                class="h-8"
               />
             </div>
-            <div class="flex gap-2">
+            <div class="flex space-x-2">
               <img
+                loading="lazy"
                 src="https://bizweb.dktcdn.net/100/506/650/themes/944598/assets/payment_4.png?1739018973665"
-                alt=""
-                width="70"
-                height="20"
+                alt="Payment 4"
+                class="h-8"
               />
               <img
+                loading="lazy"
                 src="https://bizweb.dktcdn.net/100/506/650/themes/944598/assets/payment_5.png?1739018973665"
-                alt=""
-                width="70"
-                height="20"
+                alt="Payment 5"
+                class="h-8"
               />
               <img
+                loading="lazy"
                 src="https://bizweb.dktcdn.net/100/506/650/themes/944598/assets/payment_6.png?1739018973665"
-                alt=""
-                width="70"
-                height="20"
+                alt="Payment 6"
+                class="h-8"
               />
             </div>
           </div>
@@ -204,12 +211,14 @@
           </div>
           <div class="flex">
             <img
+              loading="lazy"
               src="https://bizweb.dktcdn.net/100/506/650/themes/944598/assets/certifi_1.png?1739018973665"
               alt=""
               width="150"
               height="50"
             />
             <img
+              loading="lazy"
               src="https://bizweb.dktcdn.net/100/506/650/themes/944598/assets/certifi_2.png?1739018973665"
               alt=""
               width="100"

@@ -10,9 +10,9 @@
   >
     <div class="md:grid md:grid-cols-2 px-[7px] md:px-[45px] xl:px-30">
       <div class="text-center px-[20px] py-[28px] relative content">
-        <TextMontserrat content="Yến sào sudes net" color="white" size="18" />
+        <TextMontserrat content="Yến sào sudes net" color="white" :size="18" />
         <TextRoboto content="Câu chuyện về sudes net" color="#fdc97d" />
-        <div class="pt-4"><TwoSquareSeperate color="#fdc97d" size="10" /></div>
+        <div class="pt-4"><TwoSquareSeperate color="#fdc97d" :size="10" /></div>
         <p class="text-white text-[16px] pt-5 text-justify">
           Yến sào Sudes Nest Câu chuyện về Sudes Nest Như quý vị đã biết: "Tài sản lớn nhất của đời
           người là sức khỏe và trí tuệ", có sức khỏe và trí tuệ thì sẽ có tất cả. Sản phẩm yến sào
@@ -26,6 +26,7 @@
       </div>
       <div>
         <img
+          loading="lazy"
           src="https://bizweb.dktcdn.net/thumb/grande/100/506/650/themes/944598/assets/section_about_product_1.png?1739018973665"
           alt=""
         />

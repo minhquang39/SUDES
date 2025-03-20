@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="text-center py-[30px]">
-      <TextMontserrat content="Yến sào Sudes Net" color="#053024" size="18" />
+      <TextMontserrat content="Yến sào Sudes Net" color="#053024" :size="18" />
       <TextRoboto content="Vì sao chọn chúng tôi" color="#333" />
       <div class="py-4">
         <TwoSquareSeperate color="#053024" />

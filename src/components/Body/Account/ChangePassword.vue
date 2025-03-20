@@ -63,7 +63,7 @@ const handleChangePassword = async () => {
   }
 
   try {
-    const { data } = await apiClient.post('/account/changepassword', {
+    const { data } = await apiClient.post('/account/change-password', {
       email,
       oldPassword: oldPassword.value,
       newPassword: newPassword.value,

@@ -10,6 +10,9 @@ import AccountInfo from '@/components/Body/Account/AccountInfo.vue'
 import AccountOrder from '@/components/Body/Account/AccountOrder.vue'
 import ChangePassword from '@/components/Body/Account/ChangePassword.vue'
 import OTPView from '@/views/OTPView.vue'
+import NotFoundView from '@/views/NotFoundView.vue'
+import ForgotPasswordView from '@/views/ForgotPasswordView.vue'
+import ResetPasswordView from '@/views/ResetPasswordView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -55,6 +58,24 @@ const router = createRouter({
           },
         },
         {
+          path: '/account/forgot-password',
+          name: 'forgot-password',
+          component: ForgotPasswordView,
+          meta: {
+            isHeader: false,
+            isFooter: false,
+          },
+        },
+        {
+          path: '/account/reset-password',
+          name: 'reset-password',
+          component: ResetPasswordView,
+          meta: {
+            isHeader: false,
+            isFooter: false,
+          },
+        },
+        {
           path: '/account',
           name: 'Account',
           component: AccountView,
@@ -94,6 +115,15 @@ const router = createRouter({
           ],
         },
       ],
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'not-found',
+      component: NotFoundView,
+      meta: {
+        isHeader: false,
+        isFooter: false,
+      },
     },
   ],
 })

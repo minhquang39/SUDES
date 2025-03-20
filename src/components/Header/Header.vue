@@ -83,9 +83,14 @@
       <div class="grid grid-cols-12 px-[7px] lg:px-11 xl:px-30 gap-4 items-center">
         <div class="col-span-6 sm:col-span-6 lg:col-span-3 order-1 lg:order-1">
           <div class="px-[7px] lg:px-0">
-            <router-link to="/">
-              <img src="/images/header/logo.webp" alt="" width="250" height="96"
-            /></router-link>
+            <router-link to="/" class="flex items-center">
+              <img
+                loading="lazy"
+                src="https://bizweb.dktcdn.net/100/506/650/themes/944598/assets/logo.png?1739018973665"
+                alt="Logo"
+                class="h-12"
+              />
+            </router-link>
           </div>
         </div>
         <div class="col-span-12 sm:col-span-12 lg:col-span-6 order-3 lg:order-2">

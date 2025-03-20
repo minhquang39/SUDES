@@ -117,22 +117,6 @@
                 </p>
               </div>
             </form>
-
-            <p class="text-center text-sm">Hoặc đăng nhập bằng</p>
-            <div class="flex justify-center gap-3 my-7">
-              <img
-                src="//bizweb.dktcdn.net/assets/admin/images/login/fb-btn.svg"
-                width="129"
-                height="37"
-                alt=""
-              />
-              <img
-                src="https://bizweb.dktcdn.net/assets/admin/images/login/gp-btn.svg"
-                width="129"
-                height="37"
-                alt=""
-              />
-            </div>
           </div>
         </div>
         <div class="hidden md:block md:col-span-4"></div>
@@ -144,8 +128,10 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-
+import { useAuthStore } from '../stores/auth'
+import apiClient from '@/utils/axios'
 const router = useRouter()
+const authStore = useAuthStore()
 const firstName = ref('')
 const lastName = ref('')
 const email = ref('')
@@ -221,42 +207,64 @@ const handleRegister = async () => {
 
   try {
     isLoading.value = true
-    setTimeout(() => {
+    error.value = ''
+
+    // Gọi API đăng ký
+    const response = await apiClient.post('/account/register', {
+      first_name: firstName.value.trim(),
+      last_name: lastName.value.trim(),
+      email: email.value.trim(),
+      phone: phone.value.trim(),
+      password: password.value,
+    })
+
+    if (response.data.success) {
+      // Lưu email vào store để sử dụng ở trang verify
+      authStore.setPendingEmail(email.value)
+
+      // Hiển thị thông báo thành công
+      $toast.success('Đăng ký thành công! Vui lòng xác thực email của bạn.', {
+        position: 'top-right',
+        duration: 3000,
+      })
+
+      // Delay 2s trước khi chuyển hướng
+      await new Promise((resolve) => setTimeout(resolve, 2000))
       router.push('/account/verify')
-    }, 2000)
-  } catch (error) {
-    console.log(error)
+    } else {
+      error.value = response.data.message || 'Đăng ký không thành công'
+    }
+  } catch (err) {
+    console.error('Register error:', err)
+    if (err.response) {
+      const { data } = err.response
+      switch (data.code) {
+        case 1001:
+          error.value = 'Email đã được sử dụng'
+          break
+        case 1003:
+          error.value = 'Số điện thoại đã được sử dụng'
+          break
+        default:
+          error.value = data.message || 'Có lỗi xảy ra khi đăng ký'
+      }
+    } else if (err.request) {
+      error.value = 'Không thể kết nối đến server. Vui lòng kiểm tra kết nối internet'
+    } else {
+      error.value = 'Có lỗi xảy ra khi gửi yêu cầu'
+    }
+  } finally {
     isLoading.value = false
   }
+}
 
-  // try {
-  //   const response = await fetch('http://localhost:3000/account/register', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify({
-  //       first_name: firstName.value.trim(),
-  //       last_name: lastName.value.trim(),
-  //       email: email.value.trim(),
-  //       phone: phone.value.trim(),
-  //       password: password.value,
-  //     }),
-  //   })
-
-  //   const data = await response.json()
-
-  //   if (response.ok) {
-  //     console.log('Đăng ký thành công:', data)
-
-  //     router.push('/account/login')
-  //   } else {
-  //     // Xử lý lỗi từ server
-  //     error.value = data.message || 'Đăng ký không thành công'
-  //   }
-  // } catch (err) {
-  //   error.value = 'Có lỗi xảy ra khi kết nối với máy chủ'
-  //   console.error(err)
-  // }
+const handleGoogleLogin = async () => {
+  try {
+    // TODO: Implement Google OAuth login
+    $toast.info('Tính năng đăng nhập bằng Google đang được phát triển')
+  } catch (error) {
+    console.error('Google login error:', error)
+    $toast.error('Có lỗi xảy ra khi đăng nhập bằng Google')
+  }
 }
 </script>

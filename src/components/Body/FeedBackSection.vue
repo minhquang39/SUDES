@@ -3,16 +3,16 @@
     <div class="text-center pt-[30px] bg-section relative -mx-[7px] md:-mx-[45px] xl:-mx-30">
       <div>
         <div class="z-10 relative">
-          <TextMontserrat color="#fdc97d" content="Yến sào sudes nest" size="20" />
-          <TextRoboto color="#fff" content="Khách hàng nói về chúng tôi" size="26" />
+          <TextMontserrat color="#fdc97d" content="Yến sào sudes nest" :size="20" />
+          <TextRoboto color="#fff" content="Khách hàng nói về chúng tôi" :size="26" />
           <div class="my-2">
             <TextMontserrat
               color="#fff"
               content="Hơn +50,000 khách hàng đã sử dụng cảm nhận như thế nào về Sudes Nest"
-              size="16"
+              :size="16"
             />
           </div>
-          <div class="my-4"><TwoSquareSeperate color="#fdc97d" size="10" /></div>
+          <div class="my-4"><TwoSquareSeperate color="#fdc97d" :size="10" /></div>
         </div>
         <!-- swiper -->
         <div

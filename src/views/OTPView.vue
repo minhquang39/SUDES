@@ -1,11 +1,20 @@
 <template>
-  <div class="bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+  <div class="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg">
-      <div class="text-center">
+      <div v-if="!type === 'reset-password'" class="text-center">
         <h2 class="text-2xl font-bold text-gray-900 mb-2">Verify the code we sent to your email</h2>
         <p class="text-gray-600 text-sm mb-6">
           Before you can register, please enter the code we sent to your email. We have sent you a
           verification code by email at
+          <span class="font-medium text-gray-900">{{ email }}</span>
+        </p>
+        <p class="text-gray-700 mb-8">Enter the verification code you received:</p>
+      </div>
+      <div v-else class="text-center">
+        <h2 class="text-2xl font-bold text-gray-900 mb-2">Verify the code we sent to your email</h2>
+        <p class="text-gray-600 text-sm mb-6">
+          Before you can change password, please enter the code we sent to your email. We have sent
+          you a verification code by email at
           <span class="font-medium text-gray-900">{{ email }}</span>
         </p>
         <p class="text-gray-700 mb-8">Enter the verification code you received:</p>
@@ -163,17 +172,18 @@
 
 <script setup>
 import { ref, onMounted, watch } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import apiClient from '@/utils/axios'
-import { useRouter } from 'vue-router'
-import { useToast } from 'vue-toast-notification'
 
-const $toast = useToast()
-const authStore = useAuthStore()
-const email = ref(authStore.pendingEmail)
 const router = useRouter()
+const route = useRoute()
+const authStore = useAuthStore()
+
+const email = ref('')
 const isLoading = ref(false)
 const isResending = ref(false)
+const timer = ref(60)
 
 const num1 = ref('')
 const num2 = ref('')
@@ -188,135 +198,70 @@ const input3 = ref(null)
 const input4 = ref(null)
 const input5 = ref(null)
 const input6 = ref(null)
-const timer = ref(60)
 
-// Tự động focus vào input đầu tiên khi component được mount
+const type = route.query.type
+
 onMounted(async () => {
-  input1.value.focus()
-
-  if (email.value) {
-    try {
-      isLoading.value = true
-      const response = await apiClient.post('/account/send-otp', {
-        email: email.value,
-      })
-      if (response.data.success) {
-        $toast.success('Mã xác thực đã được gửi đến email của bạn', {
-          position: 'top-right',
-          duration: 3000,
-        })
-      }
-    } catch (error) {
-      $toast.error('Không thể gửi mã xác thực. Vui lòng thử lại sau', {
-        position: 'top-right',
-        duration: 3000,
-      })
-    } finally {
-      isLoading.value = false
-    }
+  if (type === 'reset-password') {
+    email.value = authStore.pendingEmail
+  } else {
+    email.value = authStore.pendingEmail
+    const response = await apiClient.post('/account/send-otp', {
+      email: email.value,
+    })
   }
 })
 
 const handleInput = (event, position) => {
   const value = event.target.value
+  if (value.length === 1) {
+    switch (position) {
+      case 1:
+        input2.value.focus()
+        break
+      case 2:
+        input3.value.focus()
+        break
+      case 3:
+        input4.value.focus()
+        break
+      case 4:
+        input5.value.focus()
+        break
+      case 5:
+        input6.value.focus()
+        break
+    }
+  }
+}
 
-  // Chỉ cho phép số
-  if (!/^\d*$/.test(value)) {
+const handleKeydown = (event, position) => {
+  if (event.key === 'Backspace' && !event.target.value) {
     switch (position) {
       case 1:
         num1.value = ''
         break
       case 2:
         num2.value = ''
-        break
-      case 3:
-        num3.value = ''
-        break
-      case 4:
-        num4.value = ''
-        break
-      case 5:
-        num5.value = ''
-        break
-      case 6:
-        num6.value = ''
-        break
-    }
-  } else if (value.length === 1) {
-    // Nếu đã nhập đủ 1 số và chưa phải ô cuối cùng, focus vào ô tiếp theo
-    if (position < 6) {
-      switch (position) {
-        case 1:
-          input2.value.focus()
-          break
-        case 2:
-          input3.value.focus()
-          break
-        case 3:
-          input4.value.focus()
-          break
-        case 4:
-          input5.value.focus()
-          break
-        case 5:
-          input6.value.focus()
-          break
-      }
-    }
-  }
-}
-
-const handleKeydown = (event, position) => {
-  // Xử lý khi nhấn Backspace
-  if (event.key === 'Backspace' && !event.target.value && position > 1) {
-    event.preventDefault()
-    switch (position) {
-      case 2:
         input1.value.focus()
         break
       case 3:
+        num3.value = ''
         input2.value.focus()
         break
       case 4:
+        num4.value = ''
         input3.value.focus()
         break
       case 5:
+        num5.value = ''
         input4.value.focus()
         break
       case 6:
+        num6.value = ''
         input5.value.focus()
         break
     }
-  }
-}
-
-const handleResendCode = async () => {
-  try {
-    isResending.value = true
-    const response = await apiClient.post('/account/resend-otp', {
-      email: email.value,
-    })
-    if (response.data.success) {
-      $toast.success('Mã xác thực mới đã được gửi', {
-        position: 'top-right',
-        duration: 3000,
-      })
-      timer.value = 60
-      const timerInterval = setInterval(() => {
-        timer.value--
-        if (timer.value <= 0) {
-          clearInterval(timerInterval)
-          timer.value = 60
-        }
-      }, 1000)
-    }
-  } catch (error) {
-    $toast.error('Không thể gửi lại mã xác thực. Vui lòng thử lại sau', {
-      position: 'top-right',
-      duration: 3000,
-    })
-  } finally {
-    isResending.value = false
   }
 }
 
@@ -324,46 +269,52 @@ const handleVerifyCode = async () => {
   const otp = `${num1.value}${num2.value}${num3.value}${num4.value}${num5.value}${num6.value}`
 
   if (otp.length !== 6) {
-    $toast.error('Vui lòng nhập đầy đủ mã xác thực', {
-      position: 'top-right',
-      duration: 3000,
-    })
     return
   }
 
+  isLoading.value = true
   try {
-    isLoading.value = true
     const response = await apiClient.post('/account/verify-otp', {
       email: email.value,
       otp: otp,
     })
 
     if (response.data.success) {
-      $toast.success('Xác thực email thành công', {
-        position: 'top-right',
-        duration: 3000,
-      })
-
-      // Delay 2s trước khi chuyển hướng
-      await new Promise((resolve) => setTimeout(resolve, 2000))
-
-      authStore.clearPendingEmail()
-      router.push('/account/login')
+      if (type === 'reset-password') {
+        router.push('/account/reset-password')
+      } else {
+        router.push('/account/login')
+      }
     }
   } catch (error) {
-    if (error.response?.data?.code === 1003) {
-      $toast.error('Mã xác thực không chính xác', {
-        position: 'top-right',
-        duration: 3000,
-      })
-    } else {
-      $toast.error('Xác thực thất bại. Vui lòng thử lại', {
-        position: 'top-right',
-        duration: 3000,
-      })
-    }
+    console.error('Error verifying OTP:', error)
   } finally {
     isLoading.value = false
+  }
+}
+
+const handleResendCode = async () => {
+  if (timer.value < 60 || isResending.value) return
+
+  isResending.value = true
+  try {
+    const response = await apiClient.post('/account/resend-otp', {
+      email: email.value,
+    })
+
+    if (response.data.success) {
+      timer.value = 60
+      const interval = setInterval(() => {
+        timer.value--
+        if (timer.value <= 0) {
+          clearInterval(interval)
+        }
+      }, 1000)
+    }
+  } catch (error) {
+    console.error('Error resending OTP:', error)
+  } finally {
+    isResending.value = false
   }
 }
 

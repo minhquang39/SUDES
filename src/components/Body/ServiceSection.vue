@@ -16,6 +16,7 @@
               >
                 <div class="relative icon-service">
                   <img
+                    loading="lazy"
                     :src="image.image"
                     alt=""
                     width="40"

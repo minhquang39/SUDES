@@ -14,7 +14,7 @@
 
             <div class="text-red-500 text-center" v-if="error">{{ error }}</div>
 
-            <form @submit.prevent="" action="">
+            <form @submit.prevent="handleLogin" action="">
               <div class="mb-[15px]">
                 <input
                   type="email"
@@ -34,7 +34,6 @@
 
               <div class="bg-mainColor p-1">
                 <button
-                  @click="handleLogin"
                   type="submit"
                   class="text-center font-bold text-white border border-white p-1 w-full flex items-center justify-center"
                 >
@@ -65,25 +64,24 @@
             </form>
 
             <div class="flex justify-between my-[15px]">
-              <span class="text-sm hover:text-hover cursor-pointer">Quên mật khẩu?</span>
+              <router-link
+                to="/account/forgot-password"
+                class="text-sm hover:text-hover cursor-pointer"
+                >Quên mật khẩu</router-link
+              >
               <router-link to="/account/register" class="text-sm hover:text-hover cursor-pointer"
                 >Đăng ký</router-link
               >
             </div>
             <p class="text-center text-sm">Hoặc đăng nhập bằng</p>
-            <div class="flex justify-center gap-3 my-7">
-              <img
-                src="//bizweb.dktcdn.net/assets/admin/images/login/fb-btn.svg"
-                width="129"
-                height="37"
-                alt=""
-              />
-              <img
-                src="https://bizweb.dktcdn.net/assets/admin/images/login/gp-btn.svg"
-                width="129"
-                height="37"
-                alt=""
-              />
+            <div class="flex justify-center my-7">
+              <button
+                @click="handleGoogleLogin"
+                class="flex items-center justify-center gap-2 bg-white border border-gray-300 rounded-lg px-6 py-2 text-gray-700 hover:bg-gray-50 transition-colors duration-200 shadow-sm"
+              >
+                <img src="https://www.google.com/favicon.ico" alt="Google" class="w-5 h-5" />
+                <span>Google</span>
+              </button>
             </div>
           </div>
         </div>
@@ -123,8 +121,6 @@ const handleLogin = async () => {
       password: password.value,
     })
 
-    console.log('Login response:', response) // Debug log
-
     // Kiểm tra response có tồn tại không
     if (!response) {
       $toast.error('Không nhận được phản hồi từ server')
@@ -133,8 +129,6 @@ const handleLogin = async () => {
 
     // Xử lý response thành công
     if (response.data.success) {
-      console.log('Login success data:', response.data) // Debug log
-
       // Kiểm tra token và user có tồn tại không
       if (!response.data.data.token || !response.data.data.user) {
         console.error('Missing token or user data:', response.data) // Debug log
@@ -144,6 +138,7 @@ const handleLogin = async () => {
 
       try {
         // Lưu vào store và localStorage
+        console.log('response.data.data.user', response.data.data.user)
         authStore.login(response.data.data.token, response.data.data.user)
         localStorage.setItem('token', response.data.data.token)
         localStorage.setItem('user', JSON.stringify(response.data.data.user))
@@ -183,6 +178,7 @@ const handleLogin = async () => {
           $toast.error('Tài khoản không tồn tại')
           break
         case 1002:
+          // Chỉ hiển thị toast warning và chuyển hướng
           $toast.warning('Vui lòng xác thực email trước khi đăng nhập', {
             position: 'top-right',
             duration: 3000,
@@ -193,7 +189,7 @@ const handleLogin = async () => {
           // Lưu email vào store thay vì query
           authStore.setPendingEmail(email.value)
           router.push('/account/verify')
-          break
+          return // Thêm return để không chạy vào finally block
         default:
           $toast.error(data.message || 'Đăng nhập thất bại')
       }
@@ -206,6 +202,16 @@ const handleLogin = async () => {
     }
   } finally {
     isLoading.value = false
+  }
+}
+
+const handleGoogleLogin = async () => {
+  try {
+    // Chuyển hướng đến endpoint xác thực Google
+    window.location.href = `${import.meta.env.VITE_API_URL}/account/auth/google`
+  } catch (error) {
+    console.error('Google login error:', error)
+    $toast.error('Có lỗi xảy ra khi đăng nhập bằng Google')
   }
 }
 </script>
