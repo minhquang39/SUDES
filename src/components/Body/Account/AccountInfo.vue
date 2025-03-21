@@ -128,6 +128,7 @@ import apiClient from '@/utils/axios'
 const authStore = useAuthStore()
 const toast = useToast()
 const isLoading = ref(false)
+const isAvatarLoading = ref(false)
 const fileInput = ref(null)
 const avatarPreview = ref(authStore.user?.avatar || '')
 const avatarFile = ref(null)
@@ -228,23 +229,24 @@ const updateInfo = async () => {
       const formData = new FormData()
       formData.append('avatar', fileInput.value.files[0])
 
-      const avatarResponse = await apiClient.put('/account/update-avatar', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      })
+      try {
+        const avatarResponse = await apiClient.put('/account/update-avatar', formData)
 
-      if (avatarResponse.data) {
-        hasUpdates = true
-        // Cập nhật avatar trong store
-        authStore.setUser({
-          ...authStore.user,
-          avatar: avatarResponse.data.data.path || avatarResponse.data.data?.avatar,
-        })
-
-        // Reset file input và preview
-        avatarFile.value = null
-        avatarPreview.value = avatarResponse.data.data.path
+        if (avatarResponse.data) {
+          hasUpdates = true
+          // Cập nhật avatar trong store
+          const newAvatarUrl = avatarResponse.data.data?.path || avatarResponse.data.data?.avatar
+          if (newAvatarUrl) {
+            authStore.setUser({
+              ...authStore.user,
+              avatar: newAvatarUrl,
+            })
+            avatarPreview.value = newAvatarUrl
+          }
+        }
+      } catch (avatarError) {
+        console.error('Avatar upload error:', avatarError)
+        throw new Error('Không thể cập nhật ảnh đại diện. Vui lòng thử lại.')
       }
     }
 
@@ -255,7 +257,8 @@ const updateInfo = async () => {
     }
   } catch (error) {
     console.error('Update error:', error)
-    const errorMessage = error.response?.data?.message || 'Có lỗi xảy ra khi cập nhật thông tin'
+    const errorMessage =
+      error.response?.data?.message || error.message || 'Có lỗi xảy ra khi cập nhật thông tin'
     toast.error(errorMessage, {
       position: 'top-right',
     })

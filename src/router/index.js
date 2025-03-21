@@ -77,42 +77,12 @@ const router = createRouter({
         },
         {
           path: '/account',
-          name: 'Account',
-          component: AccountView,
+          name: 'account',
+          component: () => import('@/views/AccountView.vue'),
           meta: {
             requiresAuth: true,
             isHeader: true,
-            isFooter: false,
           },
-          children: [
-            {
-              path: '',
-              component: AccountInfo,
-              meta: {
-                requiresAuth: true,
-                isHeader: true,
-                isFooter: false,
-              },
-            },
-            {
-              path: 'orders',
-              component: AccountOrder,
-              meta: {
-                requiresAuth: true,
-                isHeader: true,
-                isFooter: false,
-              },
-            },
-            {
-              path: 'changepassword',
-              component: ChangePassword,
-              meta: {
-                requiresAuth: true,
-                isHeader: true,
-                isFooter: false,
-              },
-            },
-          ],
         },
       ],
     },

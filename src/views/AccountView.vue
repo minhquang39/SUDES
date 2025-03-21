@@ -13,26 +13,29 @@
             </div>
             <div>
               <router-link
-                to="/account"
+                :to="{ path: '/account', query: { type: 'info' } }"
                 class="text-[#212B25] font-normal hover:text-hover cursor-pointer mb-4 block"
-                active-class="text-hover font-medium"
-                exact-active-class="text-hover font-medium"
+                :class="{ 'text-hover font-medium': currentType === 'info' }"
               >
                 Thông tin tài khoản
               </router-link>
               <router-link
-                to="/account/orders"
+                :to="{ path: '/account', query: { type: 'address' } }"
                 class="text-[#212B25] font-normal hover:text-hover cursor-pointer mb-4 block"
-                active-class="text-hover font-medium"
-                exact-active-class="text-hover font-medium"
+                :class="{ 'text-hover font-medium': currentType === 'address' }"
+                >Sổ địa chỉ</router-link
+              >
+              <router-link
+                :to="{ path: '/account', query: { type: 'orders' } }"
+                class="text-[#212B25] font-normal hover:text-hover cursor-pointer mb-4 block"
+                :class="{ 'text-hover font-medium': currentType === 'orders' }"
               >
                 Đơn hàng của bạn
               </router-link>
               <router-link
-                to="/account/changepassword"
+                :to="{ path: '/account', query: { type: 'password' } }"
                 class="text-[#212B25] font-normal hover:text-hover cursor-pointer mb-4 block"
-                active-class="text-hover font-medium"
-                exact-active-class="text-hover font-medium"
+                :class="{ 'text-hover font-medium': currentType === 'password' }"
               >
                 Đổi mật khẩu
               </router-link>
@@ -47,7 +50,7 @@
         </div>
         <div class="col-span-9">
           <div class="bg-white p-[20px] h-full">
-            <router-view></router-view>
+            <component :is="currentComponent"></component>
           </div>
         </div>
       </div>
@@ -55,15 +58,38 @@
   </div>
 </template>
 
-<script setup>  
+<script setup>
 import { useAuthStore } from '@/stores/auth'
-import { onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
-
+import { onMounted, ref, computed } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import AccountInfo from '@/components/Body/Account/AccountInfo.vue'
+import AccountOrder from '@/components/Body/Account/AccountOrder.vue'
+import ChangePassword from '@/components/Body/Account/ChangePassword.vue'
+import AccountAddress from '@/components/Body/Account/AccountAddress.vue'
 const router = useRouter()
+const route = useRoute()
 const authStore = useAuthStore()
 
 const user = authStore.user
+
+// Lấy type từ query parameter, mặc định là 'info'
+const currentType = computed(() => {
+  return route.query.type || 'info'
+})
+
+// Component tương ứng với type
+const currentComponent = computed(() => {
+  switch (currentType.value) {
+    case 'orders':
+      return AccountOrder
+    case 'password':
+      return ChangePassword
+    case 'address':
+      return AccountAddress
+    default:
+      return AccountInfo
+  }
+})
 
 onMounted(() => {
   user.value = JSON.parse(localStorage.getItem('user'))
