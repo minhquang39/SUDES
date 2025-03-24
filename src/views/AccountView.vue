@@ -93,7 +93,6 @@ const currentComponent = computed(() => {
 
 onMounted(() => {
   user.value = JSON.parse(localStorage.getItem('user'))
-  console.log(user)
 })
 
 const logOut = () => {

@@ -138,12 +138,9 @@ const handleLogin = async () => {
 
       try {
         // Lưu vào store và localStorage
-        console.log('response.data.data.user', response.data.data.user)
         authStore.login(response.data.data.token, response.data.data.user)
         localStorage.setItem('token', response.data.data.token)
         localStorage.setItem('user', JSON.stringify(response.data.data.user))
-
-        console.log('Auth store after login:', authStore) // Debug log
 
         $toast.success('Đăng nhập thành công', {
           position: 'top-right',
