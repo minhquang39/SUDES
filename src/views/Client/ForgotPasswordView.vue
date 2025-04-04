@@ -90,7 +90,10 @@ const handleSubmit = async () => {
     }, 3000)
   } catch (error) {
     console.error('Forgot password error:', error)
-    $toast.error(error.response?.data?.message || 'Có lỗi xảy ra, vui lòng thử lại')
+    $toast.error(error.response?.data?.message || 'Có lỗi xảy ra, vui lòng thử lại', {
+      position: 'top-right',
+      duration: 1000,
+    })
   } finally {
     isLoading.value = false
   }

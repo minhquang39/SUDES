@@ -112,7 +112,10 @@ const handleSubmit = async () => {
     })
     if (response.data.success) {
       isSuccess.value = true
-      $toast.success('Đặt lại mật khẩu thành công')
+      $toast.success('Đặt lại mật khẩu thành công', {
+        position: 'top-right',
+        duration: 1000,
+      })
 
       // Xóa email đang chờ xử lý
       authStore.clearPendingEmail()
@@ -124,7 +127,10 @@ const handleSubmit = async () => {
     }
   } catch (error) {
     console.error('Reset password error:', error)
-    $toast.error(error.response?.data?.message || 'Có lỗi xảy ra, vui lòng thử lại')
+    $toast.error(error.response?.data?.message || 'Có lỗi xảy ra, vui lòng thử lại', {
+      position: 'top-right',
+      duration: 1000,
+    })
   } finally {
     isLoading.value = false
   }

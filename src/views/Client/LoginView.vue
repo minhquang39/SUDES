@@ -123,7 +123,10 @@ const handleLogin = async () => {
 
     // Kiểm tra response có tồn tại không
     if (!response) {
-      $toast.error('Không nhận được phản hồi từ server')
+      $toast.error('Không nhận được phản hồi từ server', {
+        position: 'top-right',
+        duration: 1000,
+      })
       return
     }
 
@@ -132,7 +135,10 @@ const handleLogin = async () => {
       // Kiểm tra token và user có tồn tại không
       if (!response.data.data.token || !response.data.data.user) {
         console.error('Missing token or user data:', response.data) // Debug log
-        $toast.error('Thông tin xác thực không đầy đủ')
+        $toast.error('Thông tin xác thực không đầy đủ', {
+          position: 'top-right',
+          duration: 1000,
+        })
         return
       }
 
@@ -152,12 +158,18 @@ const handleLogin = async () => {
         }, 1000)
       } catch (error) {
         console.error('Error saving auth data:', error) // Debug log
-        $toast.error('Có lỗi xảy ra khi lưu thông tin đăng nhập')
+        $toast.error('Có lỗi xảy ra khi lưu thông tin đăng nhập', {
+          position: 'top-right',
+          duration: 1000,
+        })
       }
     } else {
       // Xử lý response không thành công từ server
       console.error('Login failed:', response.data) // Debug log
-      $toast.error(response.data.message || 'Đăng nhập thất bại')
+      $toast.error(response.data.message || 'Đăng nhập thất bại', {
+        position: 'top-right',
+        duration: 1000,
+      })
     }
   } catch (err) {
     console.error('Login error:', err) // Debug log
@@ -169,10 +181,16 @@ const handleLogin = async () => {
       // Xử lý các mã lỗi cụ thể
       switch (data.code) {
         case 1004:
-          $toast.error('Mật khẩu không chính xác')
+          $toast.error('Mật khẩu không chính xác', {
+            position: 'top-right',
+            duration: 1000,
+          })
           break
         case 1006:
-          $toast.error('Tài khoản không tồn tại')
+          $toast.error('Tài khoản không tồn tại', {
+            position: 'top-right',
+            duration: 1000,
+          })
           break
         case 1002:
           // Chỉ hiển thị toast warning và chuyển hướng
@@ -188,14 +206,23 @@ const handleLogin = async () => {
           router.push('/account/verify')
           return // Thêm return để không chạy vào finally block
         default:
-          $toast.error(data.message || 'Đăng nhập thất bại')
+          $toast.error(data.message || 'Đăng nhập thất bại', {
+            position: 'top-right',
+            duration: 1000,
+          })
       }
     } else if (err.request) {
       // Không nhận được response từ server
-      $toast.error('Không thể kết nối đến server. Vui lòng kiểm tra kết nối internet')
+      $toast.error('Không thể kết nối đến server. Vui lòng kiểm tra kết nối internet', {
+        position: 'top-right',
+        duration: 1000,
+      })
     } else {
       // Lỗi khi tạo request
-      $toast.error('Có lỗi xảy ra khi gửi yêu cầu')
+      $toast.error('Có lỗi xảy ra khi gửi yêu cầu', {
+        position: 'top-right',
+        duration: 1000,
+      })
     }
   } finally {
     isLoading.value = false
@@ -208,7 +235,10 @@ const handleGoogleLogin = async () => {
     window.location.href = `${import.meta.env.VITE_API_URL}/account/auth/google`
   } catch (error) {
     console.error('Google login error:', error)
-    $toast.error('Có lỗi xảy ra khi đăng nhập bằng Google')
+    $toast.error('Có lỗi xảy ra khi đăng nhập bằng Google', {
+      position: 'top-right',
+      duration: 1000,
+    })
   }
 }
 </script>

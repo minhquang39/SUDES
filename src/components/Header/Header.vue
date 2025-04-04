@@ -1,7 +1,7 @@
 <template>
-  <div class="">
+  <div>
     <!-- top  -->
-    <div class="bg-[#004e3e]">
+    <div v-if="!isHideHeader" class="bg-[#004e3e]">
       <div class="flex px-[7px] lg:px-11 xl:px-30 py-1 justify-between items-center">
         <div class="flex items-center">
           <div class="mr-2">
@@ -77,6 +77,7 @@
     </div>
     <!-- body -->
     <div
+      v-if="!isHideHeader"
       class="bg-[rgb(18,102,68)] py-[8px]"
       style="background-image: url('/images/header/header_pattent.webp')"
     >
@@ -88,7 +89,7 @@
                 loading="lazy"
                 src="https://bizweb.dktcdn.net/100/506/650/themes/944598/assets/logo.png?1739018973665"
                 alt="Logo"
-                class="h-12"
+                class="h-15"
               />
             </router-link>
           </div>
@@ -118,12 +119,18 @@
       </div>
     </div>
     <!-- Bot -->
-    <div class="bg-[#004e3e] py-[6px] hidden md:block">
+    <div
+      class="bg-[#004e3e] py-[6px] hidden md:block"
+      :class="{
+        'fixed top-0 left-0 right-0 z-50 shadow-lg': isHideHeader,
+        relative: !isHideHeader,
+      }"
+    >
       <NavBar></NavBar>
     </div>
     <!--  -->
     <div
-      class="fixed top-0 left-0 right-0 bottom-0 bg-black opacity-30"
+      class="fixed top-0 left-0 right-0 bottom-0 bg-black opacity-30 z-[999]"
       v-if="isMenuOpen"
       @click="isMenuOpen = false"
     ></div>
@@ -137,7 +144,7 @@
 </template>
 
 <script>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, watch, computed } from 'vue'
 import SearchBar from './SearchBar.vue'
 import NavBar from './NavBar.vue'
 import NavBarMobile from './NavBarMobile.vue'
@@ -170,9 +177,17 @@ export default {
     const current = ref(0)
     let intervalId = null
     const isBlinking = ref(false)
+    const isHideHeader = ref(false)
 
     // Thêm xử lý click outside
 
+    watch(isMenuOpen, (newVal) => {
+      if (newVal) {
+        document.body.style.overflow = 'hidden'
+      } else {
+        document.body.style.overflow = 'auto'
+      }
+    })
     onMounted(() => {
       intervalId = setInterval(() => {
         isBlinking.value = true
@@ -185,13 +200,19 @@ export default {
           isBlinking.value = false
         }, 5000)
       }, 3000)
+      window.addEventListener('scroll', onScroll)
     })
 
     onUnmounted(() => {
       if (intervalId) {
         clearInterval(intervalId)
       }
+      window.removeEventListener('scroll', onScroll)
     })
+
+    const onScroll = () => {
+      isHideHeader.value = window.scrollY > 200
+    }
 
     return {
       events,
@@ -200,6 +221,8 @@ export default {
       isMenuOpen,
       router,
       route,
+      onScroll,
+      isHideHeader,
     }
   },
 }

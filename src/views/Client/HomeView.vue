@@ -57,7 +57,10 @@ onMounted(async () => {
         })
         console.log('response', response.data.data)
         authStore.setUser(response.data.data)
-        $toast.success('Đăng nhập thành công!')
+        $toast.success('Đăng nhập thành công!', {
+          position: 'top-right',
+          duration: 1000,
+        })
       }
 
       // Xóa token khỏi URL để tránh lưu lại trong history
@@ -66,7 +69,10 @@ onMounted(async () => {
     } catch (err) {
       console.error('Token error:', err)
       authStore.clearAuth() // Xóa token nếu có lỗi
-      $toast.error('Có lỗi xảy ra, vui lòng thử lại')
+      $toast.error('Có lỗi xảy ra, vui lòng thử lại', {
+        position: 'top-right',
+        duration: 1000,
+      })
     }
   }
 })

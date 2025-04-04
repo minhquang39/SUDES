@@ -3,43 +3,90 @@
     <h2 class="text-[#212B25] text-[19px] mb-2 font-normal uppercase">Địa chỉ</h2>
     <div class="pb-4 h-[300px] overflow-y-auto">
       <div
-        class="flex justify-between items-center border-b border-gray-200 mb-3 pb-3"
+        class="flex justify-between items-start md:items-center border-b border-gray-200 mb-3 pb-3"
         v-for="(address, index) in addressUser"
         :key="index"
       >
-        <div>
-          <div class="flex md:gap-4">
-            <b>{{ address.full_name }}</b>
-            <span v-if="address.is_default" class="text-sm font-normal bg-hover text-white p-1"
+        <div class="">
+          <div class="flex gap-2 md:gap-4">
+            <b>{{ address?.full_name }}</b>
+            <span v-if="address?.is_default" class="text-sm font-normal bg-hover text-white p-1"
               >Mặc định</span
             >
           </div>
           <div>
             <div>
-              <span><span class="text-[#666]">Địa chỉ:</span> {{ address.address_line }}</span>
+              <span><span class="text-[#666]">Địa chỉ:</span> {{ address?.address_line }}</span>
             </div>
             <div>
-              <span><span class="text-[#666]">Điện thoại:</span> {{ address.phone }}</span>
+              <span><span class="text-[#666]">Điện thoại:</span> {{ address?.phone }}</span>
             </div>
           </div>
         </div>
         <div>
-          <div class="mb-2">
+          <div class="hidden md:block">
+            <div class="mb-2">
+              <button
+                :id="address?._id"
+                @click.prevent="openModalUpdate($event)"
+                class="font-bold text-sm cursor-pointer"
+              >
+                Chỉnh sửa
+              </button>
+            </div>
             <button
-              :id="address._id"
-              @click.prevent="openModalUpdate($event)"
-              class="font-bold text-sm cursor-pointer"
+              :id="address?._id"
+              @click.prevent="handleDeleteAddress($event)"
+              class="text-red-500 font-bold text-sm cursor-pointer"
             >
-              Chỉnh sửa
+              Xoá
             </button>
           </div>
-          <button
-            :id="address._id"
-            @click.prevent="handleDeleteAddress($event)"
-            class="text-red-500 font-bold text-sm cursor-pointer"
-          >
-            Xoá
-          </button>
+          <div class="md:hidden relative group">
+            <button>
+              <svg
+                width="4"
+                height="16"
+                viewBox="0 0 4 16"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                cursor="pointer"
+              >
+                <path
+                  d="M2 3C2.82843 3 3.5 2.32843 3.5 1.5C3.5 0.671573 2.82843 0 2 0C1.17157 0 0.5 0.671573 0.5 1.5C0.5 2.32843 1.17157 3 2 3Z"
+                  fill="black"
+                ></path>
+                <path
+                  d="M2 9.5C2.82843 9.5 3.5 8.82843 3.5 8C3.5 7.17157 2.82843 6.5 2 6.5C1.17157 6.5 0.5 7.17157 0.5 8C0.5 8.82843 1.17157 9.5 2 9.5Z"
+                  fill="black"
+                ></path>
+                <path
+                  d="M2 16C2.82843 16 3.5 15.3284 3.5 14.5C3.5 13.6716 2.82843 13 2 13C1.17157 13 0.5 13.6716 0.5 14.5C0.5 15.3284 1.17157 16 2 16Z"
+                  fill="black"
+                ></path>
+              </svg>
+            </button>
+            <div
+              class="absolute top-0 right-0 min-w-max bg-white shadow-2xl rounded-md p-4 hidden group-hover:block"
+            >
+              <div class="mb-2">
+                <button
+                  :id="address?._id"
+                  @click.prevent="openModalUpdate($event)"
+                  class="font-bold text-[16px] cursor-pointer"
+                >
+                  Chỉnh sửa
+                </button>
+              </div>
+              <button
+                :id="address?._id"
+                @click.prevent="handleDeleteAddress($event)"
+                class="text-red-500 font-bold text-[16px] cursor-pointer"
+              >
+                Xoá
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -62,9 +109,9 @@
       <div class="fixed inset-0 bg-black/50 transition-opacity"></div>
 
       <!-- Modal container -->
-      <div class="flex min-h-full items-center justify-center p-4 modal-container">
+      <div class="flex min-h-full items-center justify-center md:p-4 modal-container">
         <div
-          class="bg-white rounded-lg shadow-xl w-[700px] max-w-[90%] mx-4 relative transform transition-all"
+          class="bg-white rounded-lg shadow-xl w-screen md:w-[700px] md:max-w-[90%] md:mx-4 relative transform transition-all"
         >
           <!-- Header -->
           <div class="flex justify-between items-center p-4 border-b">
@@ -470,17 +517,55 @@ const handleUpdateAddress = async () => {
       })
       if (response.status === 200) {
         console.log(response.data.data)
-        $toast.success('Cập nhật địa chỉ thành công')
+
+        if (response.data.data[0]) {
+          const defaultAddress = addressUser.value.find(
+            (address) => address._id === response.data.data[0]._id,
+          )
+          if (defaultAddress) {
+            defaultAddress.name = response.data.data[0].name
+            defaultAddress.phone = response.data.data[0].phone
+            defaultAddress.email = response.data.data[0].email
+            defaultAddress.address_line = response.data.data[0].address_line
+            defaultAddress.province = response.data.data[0].province
+            defaultAddress.district = response.data.data[0].district
+            defaultAddress.ward = response.data.data[0].ward
+            defaultAddress.is_default = response.data.data[0].is_default
+          }
+        }
+        if (response.data.data[1]) {
+          const editedAddress = addressUser.value.find(
+            (address) => address._id === response.data.data[1]._id,
+          )
+          if (editedAddress) {
+            editedAddress.name = response.data.data[1].name
+            editedAddress.phone = response.data.data[1].phone
+            editedAddress.email = response.data.data[1].email
+            editedAddress.address_line = response.data.data[1].address_line
+            editedAddress.province = response.data.data[1].province
+            editedAddress.district = response.data.data[1].district
+            editedAddress.ward = response.data.data[1].ward
+            editedAddress.is_default = response.data.data[1].is_default
+          }
+        }
+        $toast.success('Cập nhật địa chỉ thành công', {
+          position: 'top-right',
+          duration: 1000,
+        })
+
         addressUser.value = addressUser.value.map((address) =>
-          address._id === addressUpdateId.value ? response.data.data : address,
+          address._id === response.data.data[1]._id ? response.data.data[1] : address,
         )
-        addressStore.setAddress(addressUser.value)
         authStore.user.address = addressUser.value
+        addressStore.setAddress(addressUser.value)
       }
     }
   } catch (error) {
     isLoading.value = false
-    $toast.error('Cập nhật địa chỉ thất bại')
+    $toast.error('Cập nhật địa chỉ thất bại', {
+      position: 'top-right',
+      duration: 1000,
+    })
   } finally {
     isLoading.value = false
   }
@@ -490,13 +575,19 @@ const handleDeleteAddress = async (event) => {
   const addressId = event.target.getAttribute('id')
   try {
     const response = await apiClient.delete(`/account/address/${addressId}`)
-    $toast.success('Xoá địa chỉ thành công')
+    $toast.success('Xoá địa chỉ thành công', {
+      position: 'top-right',
+      duration: 1000,
+    })
     addressUser.value = addressUser.value.filter((address) => address._id !== addressId)
-    addressStore.setAddress(addressUser.value)
     authStore.user.address = addressUser.value
+    addressStore.setAddress(addressUser.value)
   } catch (error) {
     console.error('Error deleting address:', error)
-    $toast.error('Xoá địa chỉ thất bại')
+    $toast.error('Xoá địa chỉ thất bại', {
+      position: 'top-right',
+      duration: 1000,
+    })
   }
 }
 const handleCreateAddress = async () => {
@@ -514,8 +605,27 @@ const handleCreateAddress = async () => {
         is_default: isDefault.value,
       })
       if (response.status === 200) {
-        $toast.success('Thêm địa chỉ thành công')
-        addressUser.value.push(response.data.data)
+        console.log(response.data.data)
+        if (response.data.data[0]) {
+          const defaultAddress = addressUser.value.find(
+            (address) => address._id === response.data.data[0]._id,
+          )
+          if (defaultAddress) {
+            defaultAddress.name = response.data.data[0].name
+            defaultAddress.phone = response.data.data[0].phone
+            defaultAddress.email = response.data.data[0].email
+            defaultAddress.address_line = response.data.data[0].address_line
+            defaultAddress.province = response.data.data[0].province
+            defaultAddress.district = response.data.data[0].district
+            defaultAddress.ward = response.data.data[0].ward
+            defaultAddress.is_default = response.data.data[0].is_default
+          }
+        }
+        $toast.success('Thêm địa chỉ thành công', {
+          position: 'top-right',
+          duration: 1000,
+        })
+        addressUser.value.push(response.data.data[1])
         addressStore.setAddress(addressUser.value)
         authStore.user.address = addressUser.value
         setTimeout(() => {
@@ -524,7 +634,10 @@ const handleCreateAddress = async () => {
       }
     } catch (error) {
       isLoading.value = false
-      $toast.error('Thêm địa chỉ thất bại')
+      $toast.error('Thêm địa chỉ thất bại', {
+        position: 'top-right',
+        duration: 1000,
+      })
     } finally {
       isLoading.value = false
       resetModal()
@@ -596,6 +709,11 @@ const openModal = () => {
 }
 
 const resetModal = () => {
+  name.value = null
+  phone.value = null
+  email.value = null
+  addressPath.value = null
+  isDefault.value = false
   provinceInput.value = null
   province.value = null
   provinceFilter.value = null
@@ -656,8 +774,6 @@ const router = useRouter()
 const pathType = computed(() => route.query.submit)
 
 onMounted(async () => {
-  document.body.style.overflow = 'hidden'
-
   try {
     isLoading.value = true
     const response = await fetch('/address.json')
@@ -670,8 +786,16 @@ onMounted(async () => {
   } finally {
     isLoading.value = false
   }
-  addressStore.setAddress(authStore.user.address)
-  addressUser.value = addressStore.addresses
+  if (!addressUser.value) {
+    try {
+      const response = await apiClient.get('/account/address')
+      addressUser.value = response.data.data
+      addressStore.setAddress(response.data.data)
+      authStore.user.address = response.data.data
+    } catch (error) {
+      console.error('Error loading addresses:', error)
+    }
+  }
 })
 // Cleanup khi component bị hủy
 onUnmounted(() => {

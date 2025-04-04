@@ -128,7 +128,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useAuthStore } from '../stores/auth'
+import { useAuthStore } from '@/stores/auth'
 import apiClient from '@/utils/axios'
 const router = useRouter()
 const authStore = useAuthStore()
@@ -261,10 +261,16 @@ const handleRegister = async () => {
 const handleGoogleLogin = async () => {
   try {
     // TODO: Implement Google OAuth login
-    $toast.info('Tính năng đăng nhập bằng Google đang được phát triển')
+    $toast.info('Tính năng đăng nhập bằng Google đang được phát triển', {
+      position: 'top-right',
+      duration: 1000,
+    })
   } catch (error) {
     console.error('Google login error:', error)
-    $toast.error('Có lỗi xảy ra khi đăng nhập bằng Google')
+    $toast.error('Có lỗi xảy ra khi đăng nhập bằng Google', {
+      position: 'top-right',
+      duration: 1000,
+    })
   }
 }
 </script>
