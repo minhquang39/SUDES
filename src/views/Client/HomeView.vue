@@ -4,6 +4,11 @@
     <ServiceSection />
     <GiftSection />
     <AboutSection />
+    <CategorySection
+      categoryId="67eb677ca07153fe3bf1ffac"
+      title="Yến sào Sudes Nest"
+      mainText="Tổ Yến"
+    />
     <WhyChoiseSection />
     <FeedBackSection />
     <BrandSection />
@@ -28,7 +33,7 @@ const WhyChoiseSection = defineAsyncComponent(
 )
 const BrandSection = defineAsyncComponent(() => import('@/components/Body/BrandSection.vue'))
 const FeedBackSection = defineAsyncComponent(() => import('@/components/Body/FeedBackSection.vue'))
-
+const CategorySection = defineAsyncComponent(() => import('@/components/Body/CategorySection.vue'))
 const router = useRouter()
 const route = useRoute()
 const authStore = useAuthStore()

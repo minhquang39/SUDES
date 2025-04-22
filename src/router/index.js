@@ -33,6 +33,15 @@ const router = createRouter({
           },
         },
         {
+          path: '/:slug',
+          name: 'product-detail',
+          component: () => import('@/views/Client/ProductDetail.vue'),
+          meta: {
+            isHeader: true,
+            isFooter: true,
+          },
+        },
+        {
           path: '/about',
           name: 'about',
           component: () => import('@/components/Body/AboutInfo.vue'),
@@ -105,7 +114,7 @@ const router = createRouter({
           },
         },
         {
-          path: '/:policySlug',
+          path: '/chinh-sach/:policySlug',
           name: 'policy',
           component: () => import('@/views/Client/PolicyView.vue'),
           meta: {
@@ -171,6 +180,22 @@ const router = createRouter({
               path: 'category/add-sub-category',
               name: 'add-sub-category',
               component: () => import('@/views/Admin/Category/AddSubCategory.vue'),
+              meta: {
+                requiresAdmin: true,
+              },
+            },
+            {
+              path: 'category/sub-category',
+              name: 'sub-category',
+              component: () => import('@/views/Admin/Category/SubCategory.vue'),
+              meta: {
+                requiresAdmin: true,
+              },
+            },
+            {
+              path: 'product/new',
+              name: 'new-product',
+              component: () => import('@/views/Admin/Product/AddProduct.vue'),
               meta: {
                 requiresAdmin: true,
               },

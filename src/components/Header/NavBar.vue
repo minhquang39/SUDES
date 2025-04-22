@@ -38,8 +38,8 @@
 
                 <div
                   v-if="parentCategory.children.length > 0"
-                  class="absolute hidden group-hover:block left-full top-0 md:w-[calc(100vw-360px)] xl:w-[calc(100vw-540px)] bg-white border border-black z-[999] transition-all duration-300 ease-in-out p-3 z"
-                  :style="{ height: heightNavbarDynamic + 'px' }"
+                  class="absolute hidden group-hover:block left-full top-0 md:w-[calc(100vw-360px)] xl:w-[calc(100vw-540px)] bg-white border border-black z-[999] transition-all duration-300 ease-in-out p-3"
+                  style="height: 400px"
                 >
                   <div class="grid grid-cols-12">
                     <div
@@ -97,7 +97,7 @@
             <router-link
               v-for="(policy, index) in policies"
               :key="index"
-              :to="policy.slug"
+              :to="`/chinh-sach/${policy.slug}`"
               class="block p-2 bg-white font-medium hover:text-[#fdc97d] pr-12 border border-[#eee]"
             >
               {{ policy.title }}
@@ -116,7 +116,7 @@
 </template>
 
 <script>
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted } from 'vue'
 import TwoSquare from '../Icon/TwoSquare.vue'
 import { ChevronRightIcon, ChevronDownIcon } from '@heroicons/vue/24/solid'
 import apiClient from '@/utils/axios'
@@ -125,7 +125,6 @@ export default {
   setup() {
     const categories = ref([])
     const policies = ref([])
-    const heightNavbarDynamic = ref(0)
 
     onMounted(async () => {
       const [categoriesResponse, policiesResponse] = await Promise.all([
@@ -134,30 +133,13 @@ export default {
       ])
       if (categoriesResponse.status === 200) {
         categories.value = categoriesResponse.data.data
-        nextTick(() => {
-          const categoryMenu = document.querySelector('.category_menu')
-          heightNavbarDynamic.value = categoryMenu.offsetHeight
-        })
       }
       if (policiesResponse.status === 200) {
         policies.value = policiesResponse.data.data
       }
-      // try {
-      //   const response = await apiClient.get('/admin/category/parent')
-      //   if (response.status === 200) {
-      //     categories.value = response.data.data
-      //   }
-      // } catch (error) {
-      //   console.log('Failled to fetch categories', error)
-      // }
-      // try {
-      //   const response = await apiClient.get('/admin/policy')
-      // } catch (error) {
-      //   console.log('Failled to fetch policies', error)
-      // }
     })
 
-    return { categories, policies, heightNavbarDynamic }
+    return { categories, policies }
   },
 }
 </script>

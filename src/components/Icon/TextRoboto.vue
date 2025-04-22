@@ -1,5 +1,5 @@
 <template>
-  <p :style="{ color: color }" class="font-roboto uppercase font-[800] responsive-text">
+  <p :class="['font-roboto uppercase font-[800] responsive-text', colorClass]">
     {{ content }}
   </p>
 </template>
@@ -16,6 +16,11 @@ export default {
       default: 26,
     },
     content: { type: String },
+  },
+  computed: {
+    colorClass() {
+      return `text-[${this.color}]`
+    },
   },
 }
 </script>

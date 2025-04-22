@@ -197,7 +197,7 @@ const dropdownMenus = [
           </svg>`,
     items: [
       { name: 'Danh sách sản phẩm', path: '/admin/products' },
-      { name: 'Thêm sản phẩm', path: '/admin/products/add' },
+      { name: 'Thêm sản phẩm', path: '/admin/dashboard/product/new' },
       { name: 'Sửa sản phẩm', path: '/admin/products/edit' },
     ],
   },
@@ -222,6 +222,7 @@ const dropdownMenus = [
       { name: 'Danh sách danh mục', path: '/admin/dashboard/category/list' },
       { name: 'Thêm danh mục', path: '/admin/dashboard/category/add' },
       { name: 'Thêm danh mục con', path: '/admin/dashboard/category/add-sub-category' },
+      { name: 'Danh mục con', path: '/admin/dashboard/category/sub-category' },
     ],
   },
 ]

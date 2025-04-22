@@ -24,7 +24,7 @@ const props = defineProps({
   },
   theme: {
     type: String,
-    default: 'snow', // 'snow' hoặc 'bubble'
+    default: 'snow',
   },
 })
 
@@ -78,11 +78,9 @@ onMounted(() => {
     emit('change', html)
   })
 
-  // Phát ra sự kiện khi Quill đã sẵn sàng
   emit('ready', quill)
 })
 
-// Cập nhật nội dung khi prop thay đổi
 watch(
   () => props.modelValue,
   (newVal) => {
@@ -92,7 +90,6 @@ watch(
   },
 )
 
-// Watch for readOnly changes
 watch(
   () => props.readOnly,
   (newVal) => {
@@ -102,14 +99,12 @@ watch(
   },
 )
 
-// Dọn dẹp khi component unmount
 onBeforeUnmount(() => {
   if (quill) {
     quill = null
   }
 })
 
-// Expose Quill instance
 defineExpose({
   getQuill: () => quill,
   getHTML: () => quill?.root.innerHTML || '',
@@ -122,7 +117,7 @@ defineExpose({
 
 <style>
 .quill-editor {
-  border-radius: 0.375rem; /* rounded-md */
+  border-radius: 0.375rem;
 }
 .ql-toolbar.ql-snow {
   border-top-left-radius: 0.375rem;
