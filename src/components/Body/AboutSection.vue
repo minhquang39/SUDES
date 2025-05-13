@@ -22,7 +22,9 @@
           chất lượng tuyệt đối...
         </p>
 
-        <div class="pt-5"><SeeMore /></div>
+        <router-link to="/about">
+          <div class="pt-5"><SeeMore /></div>
+        </router-link>
       </div>
       <div>
         <img

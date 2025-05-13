@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
-import { computed, ref } from 'vue'
-
+import { useCartStore } from './cart'
+import { useAddressStore } from './address'
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     token: localStorage.getItem('token') || null,
@@ -26,6 +26,12 @@ export const useAuthStore = defineStore('auth', {
       localStorage.removeItem('token')
       localStorage.removeItem('user')
       localStorage.removeItem('pendingEmail')
+      localStorage.removeItem('cart')
+      localStorage.removeItem('userAddresses')
+      const cartStore = useCartStore()
+      cartStore.cart = []
+      const addressStore = useAddressStore()
+      addressStore.addresses = []
     },
 
     setPendingEmail(email) {

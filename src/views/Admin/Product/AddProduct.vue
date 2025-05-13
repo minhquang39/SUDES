@@ -5,7 +5,7 @@
         <h1 class="text-2xl font-semibold text-gray-900">Thêm sản phẩm mới</h1>
         <div class="flex space-x-3">
           <button
-            @click="goBack"
+            @click="router.back()"
             class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md bg-white hover:bg-gray-50"
           >
             <svg
@@ -370,20 +370,16 @@
                           </td>
                           <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-900">
                             <input
-                              type="number"
-                              v-model="variant.price"
-                              min="0"
-                              step="1000"
+                              type="text"
+                              v-model="variant.formattedPrice"
                               class="shadow-sm focus:ring-green-500 focus:border-green-500 block w-full sm:text-sm border-gray-300 rounded-md"
                               placeholder="0"
                             />
                           </td>
                           <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-900">
                             <input
-                              type="number"
-                              v-model="variant.oldPrice"
-                              min="0"
-                              step="1000"
+                              type="text"
+                              v-model="variant.formattedOldPrice"
                               class="shadow-sm focus:ring-green-500 focus:border-green-500 block w-full sm:text-sm border-gray-300 rounded-md"
                               placeholder="0"
                             />
@@ -502,12 +498,14 @@
 
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
+import { useRouter } from 'vue-router'
 import apiClient from '@/utils/axios'
 import { useToast } from 'vue-toast-notification'
 import 'vue-toast-notification/dist/theme-sugar.css'
 const $toast = useToast()
 import QuillEditor from '@/components/QuillEditor.vue'
 const isLoading = ref(false)
+const router = useRouter()
 
 // Hàm format số tiền
 const formatCurrency = (value) => {
@@ -577,13 +575,34 @@ const productVariants = computed(() => {
     variantInputs.value = variantValues.value.map((value, index) => {
       // Tìm giá trị cũ nếu có
       const existingVariant = variantInputs.value.find((v) => v.name === value)
-      return {
+      const newVariant = {
         name: value,
         sku: existingVariant?.sku || `${product.value.sku || 'SKU'}-${value}`,
         price: existingVariant?.price || '',
         oldPrice: existingVariant?.oldPrice || '',
-        stock: existingVariant?.stock || '',
+        stock: existingVariant?.stock !== undefined ? existingVariant.stock : '',
       }
+
+      // Định nghĩa getters và setters
+      Object.defineProperty(newVariant, 'formattedPrice', {
+        get() {
+          return formatCurrency(this.price)
+        },
+        set(value) {
+          this.price = parseCurrency(value)
+        },
+      })
+
+      Object.defineProperty(newVariant, 'formattedOldPrice', {
+        get() {
+          return formatCurrency(this.oldPrice)
+        },
+        set(value) {
+          this.oldPrice = parseCurrency(value)
+        },
+      })
+
+      return newVariant
     })
   }
 
@@ -638,14 +657,21 @@ const saveProduct = async () => {
   try {
     isLoading.value = true
 
+    // Log cho debug
+    console.log('Variants before submission:', variantInputs.value)
+
     // Validate variants
     if (hasVariants.value) {
       // Kiểm tra xem đã nhập đủ thông tin cho variants chưa
       const invalidVariants = variantInputs.value.some(
-        (variant) => !variant.sku || !variant.price || !variant.stock,
+        (variant) =>
+          !variant.sku || !variant.price || variant.stock === undefined || variant.stock === '',
       )
       if (invalidVariants) {
-        $toast.error('Vui lòng nhập đầy đủ thông tin cho tất cả phân loại')
+        $toast.error(
+          'Vui lòng nhập đầy đủ mã SKU, giá bán và số lượng tồn kho cho tất cả phân loại',
+        )
+        isLoading.value = false
         return
       }
     }
@@ -656,9 +682,13 @@ const saveProduct = async () => {
     formData.append('name', product.value.name)
     formData.append('shortDescription', product.value.shortDescription)
     formData.append('description', product.value.description)
-    formData.append('category[]', product.value.categoryId)
-    formData.append('category[]', product.value.subCategoryId)
-    formData.append('status', product.value.status)
+    if (product.value.categoryId) {
+      formData.append('category[]', product.value.categoryId)
+    }
+    if (product.value.subCategoryId) {
+      formData.append('category[]', product.value.subCategoryId)
+    }
+    formData.append('status', product.value.status || 'active')
 
     // Thêm ảnh
     if (product.value.imageFiles && product.value.imageFiles.length > 0) {
@@ -666,6 +696,9 @@ const saveProduct = async () => {
         formData.append('images', file)
       })
     }
+
+    // Kiểm tra variants trước khi thêm vào formData
+    let variantsToAdd = []
 
     // Xử lý variants
     if (!hasVariants.value) {
@@ -677,17 +710,25 @@ const saveProduct = async () => {
         oldPrice: Number(product.value.salePrice) || 0,
         stock: Number(product.value.stock) || 0,
       }
-      formData.append('variants', JSON.stringify([defaultVariant]))
+      variantsToAdd = [defaultVariant]
     } else {
       // Trường hợp có nhiều variants
-      const variants = variantInputs.value.map((variant) => ({
+      variantsToAdd = variantInputs.value.map((variant) => ({
         name: variant.name,
         sku: variant.sku,
         price: Number(variant.price) || 0,
-        oldPrice: Number(variant.oldPrice) || 0,
-        stock: Number(variant.stock) || 0,
+        oldPrice:
+          variant.oldPrice !== undefined && variant.oldPrice !== '' ? Number(variant.oldPrice) : 0,
+        stock: variant.stock !== undefined && variant.stock !== '' ? Number(variant.stock) : 0,
       }))
-      formData.append('variants', JSON.stringify(variants))
+    }
+
+    console.log('Variants to submit:', variantsToAdd)
+    formData.append('variants', JSON.stringify(variantsToAdd))
+
+    // Log formData để debug
+    for (const pair of formData.entries()) {
+      console.log(`${pair[0]}: ${pair[1]}`)
     }
 
     const response = await apiClient.post('/admin/product', formData, {
@@ -719,7 +760,10 @@ const saveProduct = async () => {
     hasVariants.value = false
   } catch (error) {
     console.error('Error:', error)
-    $toast.error('Có lỗi xảy ra khi thêm sản phẩm')
+    console.error('Error details:', error.response?.data || error.message)
+    $toast.error(
+      'Có lỗi xảy ra khi thêm sản phẩm: ' + (error.response?.data?.message || error.message),
+    )
   } finally {
     isLoading.value = false
   }

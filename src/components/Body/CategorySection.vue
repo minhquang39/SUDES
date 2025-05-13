@@ -9,7 +9,7 @@
     </div>
     <div>
       <!-- Categories -->
-      <div v-if="category" class="px-4 md:px-0">
+      <div v-if="category" class="md:px-0">
         <!-- Scrollable categories on mobile -->
         <div
           class="flex justify-start md:justify-center items-center gap-4 overflow-x-auto pb-2 hide-scrollbar"
@@ -28,7 +28,8 @@
         <div class="overflow-x-auto scroll-smooth hide-scrollbar">
           <div class="flex md:grid md:grid-cols-4 py-5 gap-4 min-w-[100%]">
             <router-link
-              v-for="product in products"
+              v-if="displayProductCategory && displayProductCategory.length > 0"
+              v-for="product in displayProductCategory.filter((p) => p.status === 'active')"
               :key="product._id"
               :to="{
                 name: 'product-detail',
@@ -37,10 +38,18 @@
             >
               <ProductCard :product="product" />
             </router-link>
+            <div v-else class="col-span-4">
+              <div class="text-center text-[##856404] bg-[#fff3cd] text-[16px] font-normal p-2">
+                Hiện tại chưa có sản phẩm nào trong danh mục này!...
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
+    <router-link :to="`/danh-muc/${categorySlug}`" class="flex justify-center">
+      <SeeMore />
+    </router-link>
   </div>
 </template>
 
@@ -50,6 +59,7 @@ import apiClient from '@/utils/axios'
 import TextRoboto from '../Icon/TextRoboto.vue'
 import TwoSquareSeperate from '../Icon/TwoSquareSeperate.vue'
 import ProductCard from './ProductCard.vue'
+import SeeMore from '../Icon/SeeMore.vue'
 
 // Define props
 const props = defineProps({
@@ -70,6 +80,14 @@ const props = defineProps({
 const currentIndex = ref(0)
 const category = ref(null)
 const products = ref(null)
+const productByCategory = ref(null)
+const categorySlug = ref(null)
+
+const displayProductCategory = computed(() => {
+  return products.value.filter((product) =>
+    product.category.includes(firstFourCategories.value[currentIndex.value]._id),
+  )
+})
 
 // Computed property for first 4 categories
 const firstFourCategories = computed(() => {
@@ -83,7 +101,7 @@ onMounted(async () => {
     if (response.status === 200) {
       category.value = response.data.data.category
       products.value = response.data.data.products
-      console.log(products.value)
+      categorySlug.value = response.data.data.category.slug
     }
   } catch (error) {
     console.log(error)

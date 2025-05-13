@@ -98,9 +98,11 @@ import 'vue-toast-notification/dist/theme-sugar.css'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import { useCartStore } from '@/stores/cart'
 import apiClient from '@/utils/axios'
 const $toast = useToast()
 const authStore = useAuthStore()
+const cartStore = useCartStore()
 const router = useRouter()
 const email = ref('')
 const password = ref('')
@@ -132,16 +134,6 @@ const handleLogin = async () => {
 
     // Xử lý response thành công
     if (response.data.success) {
-      // Kiểm tra token và user có tồn tại không
-      if (!response.data.data.token || !response.data.data.user) {
-        console.error('Missing token or user data:', response.data) // Debug log
-        $toast.error('Thông tin xác thực không đầy đủ', {
-          position: 'top-right',
-          duration: 1000,
-        })
-        return
-      }
-
       try {
         // Lưu vào store và localStorage
         authStore.login(response.data.data.token, response.data.data.user)
@@ -152,6 +144,10 @@ const handleLogin = async () => {
           position: 'top-right',
           duration: 1000,
         })
+        if (cartStore.cart.length > 0) {
+          await cartStore.mergeCart()
+        }
+        await cartStore.getCart()
 
         setTimeout(() => {
           router.push('/')

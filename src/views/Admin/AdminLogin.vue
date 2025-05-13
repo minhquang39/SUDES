@@ -169,7 +169,12 @@ const handleSignin = async () => {
       position: 'top-right',
       duration: 1000,
     })
-    router.push('/admin/dashboard')
+    console.log('Chuyển hướng đến trang loading...')
+
+    // Thêm một khoảng thời gian trước khi chuyển hướng
+    setTimeout(() => {
+      router.push('/admin/loading')
+    }, 500)
   } catch (error) {
     $toast.error('Đăng nhập thất bại', {
       position: 'top-right',

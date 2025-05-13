@@ -14,139 +14,177 @@
     <div class="">
       <!-- PC: Hiển thị 4 mục -->
       <div class="hidden lg:grid grid-cols-4 gap-4">
-        <div class="promo-box group overflow-hidden">
-          <div class="overflow-hidden">
-            <img
-              class="group-hover:scale-105 w-full aspect-[382/574] object-cover transition duration-300"
-              loading="lazy"
-              src="https://bizweb.dktcdn.net/100/506/650/themes/944598/assets/img_4banner_1.jpg?1739018973665"
-              alt="Bộ quà 4 mùa"
-            />
-          </div>
-          <div class="banner-info text-left p-4 group-hover:-translate-y-8 transition duration-300">
-            <h3 class="text-lg font-[800]">Bộ quà 4 mùa</h3>
-            <span class="text-sm mt-[4px]">Giá chỉ từ 499k</span>
-            <p class="text-sm text-[#fdc97d] my-3 italic">Xem ngay >></p>
-          </div>
-        </div>
-        <div class="promo-box group overflow-hidden">
-          <div class="overflow-hidden">
-            <img
-              class="group-hover:scale-105 w-full aspect-[382/574] object-cover transition duration-300"
-              loading="lazy"
-              src="https://bizweb.dktcdn.net/100/506/650/themes/944598/assets/img_4banner_2.jpg?1739018973665"
-              alt="Bộ quà 4 mùa"
-            />
-          </div>
-          <div class="banner-info text-left p-4 group-hover:-translate-y-8 transition duration-300">
-            <h3 class="text-lg font-[800]">Bộ quà Lộc Phát</h3>
-            <span class="text-sm mt-[4px]">Giá chỉ từ 599k</span>
-            <p class="text-sm text-[#fdc97d] my-3 italic">Xem ngay >></p>
-          </div>
-        </div>
-        <div class="promo-box group overflow-hidden">
-          <div class="overflow-hidden">
-            <img
-              class="group-hover:scale-105 w-full aspect-[382/574] object-cover transition duration-300"
-              loading="lazy"
-              src="https://bizweb.dktcdn.net/100/506/650/themes/944598/assets/img_4banner_3.jpg?1739018973665"
-              alt="Bộ quà 4 mùa"
-            />
-          </div>
-          <div class="banner-info text-left p-4 group-hover:-translate-y-8 transition duration-300">
-            <h3 class="text-lg font-[800]">Bộ quà Thịnh Vượng</h3>
-            <span class="text-sm mt-[4px]">Giá chỉ từ 799k</span>
-            <p class="text-sm text-[#fdc97d] my-3 italic">Xem ngay >></p>
-          </div>
-        </div>
-        <div class="promo-box group overflow-hidden">
-          <div class="overflow-hidden">
-            <img
-              class="group-hover:scale-105 w-full aspect-[382/574] object-cover transition duration-300"
-              loading="lazy"
-              src="https://bizweb.dktcdn.net/100/506/650/themes/944598/assets/img_4banner_4.jpg?1739018973665"
-              alt="Bộ quà 4 mùa"
-            />
-          </div>
-          <div class="banner-info text-left p-4 group-hover:-translate-y-8 transition duration-300">
-            <h3 class="text-lg font-[800]">Bộ quà Tài Lộc</h3>
-            <span class="text-sm mt-[4px]">Giá chỉ từ 999k</span>
-            <p class="text-sm text-[#fdc97d] my-3 italic">Xem ngay >></p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Mobile: Hiển thị 1.5 mục cuộn ngang -->
-      <div class="lg:hidden flex gap-5 overflow-x-auto scroll-smooth snap-x snap-mandatory">
-        <div class="promo-box flex-shrink-0 w-[70%] snap-start group overflow-hidden">
-          <div class="overflow-hidden">
-            <picture>
-              <source
-                media="(max-width: 480px)"
-                loading="lazy"
-                srcset="
-                  https://bizweb.dktcdn.net/thumb/large/100/506/650/themes/944598/assets/img_4banner_1.jpg?1739018973665
-                "
-              />
+        <router-link to="/collection/all">
+          <div class="promo-box group overflow-hidden">
+            <div class="overflow-hidden">
               <img
                 class="group-hover:scale-105 w-full aspect-[382/574] object-cover transition duration-300"
                 loading="lazy"
                 src="https://bizweb.dktcdn.net/100/506/650/themes/944598/assets/img_4banner_1.jpg?1739018973665"
                 alt="Bộ quà 4 mùa"
               />
-            </picture>
+            </div>
+            <div
+              class="banner-info text-left p-4 group-hover:-translate-y-8 transition duration-300"
+            >
+              <h3 class="text-lg font-[800]">Bộ quà 4 mùa</h3>
+              <span class="text-sm mt-[4px]">Giá chỉ từ 499k</span>
+              <p class="text-sm text-[#fdc97d] my-3 italic">Xem ngay >></p>
+            </div>
           </div>
-          <div class="banner-info text-left p-4 group-hover:-translate-y-8 transition duration-300">
-            <h3 class="text-lg font-[800]">Bộ quà 4 mùa</h3>
-            <span class="text-sm mt-[4px]">Giá chỉ từ 499k</span>
-            <p class="text-sm text-[#fdc97d] my-3 italic">Xem ngay >></p>
+        </router-link>
+
+        <router-link to="/collection/all">
+          <div class="promo-box group overflow-hidden">
+            <div class="overflow-hidden">
+              <img
+                class="group-hover:scale-105 w-full aspect-[382/574] object-cover transition duration-300"
+                loading="lazy"
+                src="https://bizweb.dktcdn.net/100/506/650/themes/944598/assets/img_4banner_2.jpg?1739018973665"
+                alt="Bộ quà Lộc Phát"
+              />
+            </div>
+            <div
+              class="banner-info text-left p-4 group-hover:-translate-y-8 transition duration-300"
+            >
+              <h3 class="text-lg font-[800]">Bộ quà Lộc Phát</h3>
+              <span class="text-sm mt-[4px]">Giá chỉ từ 599k</span>
+              <p class="text-sm text-[#fdc97d] my-3 italic">Xem ngay >></p>
+            </div>
           </div>
-        </div>
-        <div class="promo-box flex-shrink-0 w-[70%] snap-start group overflow-hidden">
-          <div class="overflow-hidden">
-            <img
-              class="group-hover:scale-105 w-full aspect-[382/574] object-cover transition duration-300"
-              loading="lazy"
-              src="https://bizweb.dktcdn.net/thumb/large/100/506/650/themes/944598/assets/img_4banner_2.jpg?1739018973665"
-              alt="Bộ quà 4 mùa"
-            />
+        </router-link>
+
+        <router-link to="/collection/all">
+          <div class="promo-box group overflow-hidden">
+            <div class="overflow-hidden">
+              <img
+                class="group-hover:scale-105 w-full aspect-[382/574] object-cover transition duration-300"
+                loading="lazy"
+                src="https://bizweb.dktcdn.net/100/506/650/themes/944598/assets/img_4banner_3.jpg?1739018973665"
+                alt="Bộ quà Thịnh Vượng"
+              />
+            </div>
+            <div
+              class="banner-info text-left p-4 group-hover:-translate-y-8 transition duration-300"
+            >
+              <h3 class="text-lg font-[800]">Bộ quà Thịnh Vượng</h3>
+              <span class="text-sm mt-[4px]">Giá chỉ từ 799k</span>
+              <p class="text-sm text-[#fdc97d] my-3 italic">Xem ngay >></p>
+            </div>
           </div>
-          <div class="banner-info text-left p-4 group-hover:-translate-y-8 transition duration-300">
-            <h3 class="text-lg font-[800]">Bộ quà Lộc Phát</h3>
-            <span class="text-sm mt-[4px]">Giá chỉ từ 599k</span>
-            <p class="text-sm text-[#fdc97d] my-3 italic">Xem ngay >></p>
+        </router-link>
+
+        <router-link to="/collection/all">
+          <div class="promo-box group overflow-hidden">
+            <div class="overflow-hidden">
+              <img
+                class="group-hover:scale-105 w-full aspect-[382/574] object-cover transition duration-300"
+                loading="lazy"
+                src="https://bizweb.dktcdn.net/100/506/650/themes/944598/assets/img_4banner_4.jpg?1739018973665"
+                alt="Bộ quà Tài Lộc"
+              />
+            </div>
+            <div
+              class="banner-info text-left p-4 group-hover:-translate-y-8 transition duration-300"
+            >
+              <h3 class="text-lg font-[800]">Bộ quà Tài Lộc</h3>
+              <span class="text-sm mt-[4px]">Giá chỉ từ 999k</span>
+              <p class="text-sm text-[#fdc97d] my-3 italic">Xem ngay >></p>
+            </div>
           </div>
-        </div>
-        <div class="promo-box flex-shrink-0 w-[70%] snap-start group overflow-hidden">
-          <div class="overflow-hidden">
-            <img
-              class="group-hover:scale-105 w-full aspect-[382/574] object-cover transition duration-300"
-              loading="lazy"
-              src="https://bizweb.dktcdn.net/thumb/large/100/506/650/themes/944598/assets/img_4banner_3.jpg?1739018973665"
-              alt="Bộ quà 4 mùa"
-            />
+        </router-link>
+      </div>
+
+      <!-- Mobile: Hiển thị 1.5 mục cuộn ngang -->
+      <div class="lg:hidden flex gap-5 overflow-x-auto scroll-smooth snap-x snap-mandatory">
+        <router-link to="/collection/all" class="flex-shrink-0 w-[70%] snap-start">
+          <div class="promo-box group overflow-hidden">
+            <div class="overflow-hidden">
+              <picture>
+                <source
+                  media="(max-width: 480px)"
+                  loading="lazy"
+                  srcset="
+                    https://bizweb.dktcdn.net/thumb/large/100/506/650/themes/944598/assets/img_4banner_1.jpg?1739018973665
+                  "
+                />
+                <img
+                  class="group-hover:scale-105 w-full aspect-[382/574] object-cover transition duration-300"
+                  loading="lazy"
+                  src="https://bizweb.dktcdn.net/100/506/650/themes/944598/assets/img_4banner_1.jpg?1739018973665"
+                  alt="Bộ quà 4 mùa"
+                />
+              </picture>
+            </div>
+            <div
+              class="banner-info text-left p-4 group-hover:-translate-y-8 transition duration-300"
+            >
+              <h3 class="text-lg font-[800]">Bộ quà 4 mùa</h3>
+              <span class="text-sm mt-[4px]">Giá chỉ từ 499k</span>
+              <p class="text-sm text-[#fdc97d] my-3 italic">Xem ngay >></p>
+            </div>
           </div>
-          <div class="banner-info text-left p-4 group-hover:-translate-y-8 transition duration-300">
-            <h3 class="text-lg font-[800]">Bộ quà Thịnh Vượng</h3>
-            <span class="text-sm mt-[4px]">Giá chỉ từ 799k</span>
-            <p class="text-sm text-[#fdc97d] my-3 italic">Xem ngay >></p>
+        </router-link>
+
+        <router-link to="/collection/all" class="flex-shrink-0 w-[70%] snap-start">
+          <div class="promo-box group overflow-hidden">
+            <div class="overflow-hidden">
+              <img
+                class="group-hover:scale-105 w-full aspect-[382/574] object-cover transition duration-300"
+                loading="lazy"
+                src="https://bizweb.dktcdn.net/thumb/large/100/506/650/themes/944598/assets/img_4banner_2.jpg?1739018973665"
+                alt="Bộ quà Lộc Phát"
+              />
+            </div>
+            <div
+              class="banner-info text-left p-4 group-hover:-translate-y-8 transition duration-300"
+            >
+              <h3 class="text-lg font-[800]">Bộ quà Lộc Phát</h3>
+              <span class="text-sm mt-[4px]">Giá chỉ từ 599k</span>
+              <p class="text-sm text-[#fdc97d] my-3 italic">Xem ngay >></p>
+            </div>
           </div>
-        </div>
-        <div class="promo-box flex-shrink-0 w-[70%] snap-start group overflow-hidden">
-          <div class="overflow-hidden">
-            <img
-              class="group-hover:scale-105 w-full aspect-[382/574] object-cover transition duration-300"
-              loading="lazy"
-              src="https://bizweb.dktcdn.net/thumb/large/100/506/650/themes/944598/assets/img_4banner_4.jpg?1739018973665"
-              alt="Bộ quà 4 mùa"
-            />
+        </router-link>
+
+        <router-link to="/collection/all" class="flex-shrink-0 w-[70%] snap-start">
+          <div class="promo-box group overflow-hidden">
+            <div class="overflow-hidden">
+              <img
+                class="group-hover:scale-105 w-full aspect-[382/574] object-cover transition duration-300"
+                loading="lazy"
+                src="https://bizweb.dktcdn.net/thumb/large/100/506/650/themes/944598/assets/img_4banner_3.jpg?1739018973665"
+                alt="Bộ quà Thịnh Vượng"
+              />
+            </div>
+            <div
+              class="banner-info text-left p-4 group-hover:-translate-y-8 transition duration-300"
+            >
+              <h3 class="text-lg font-[800]">Bộ quà Thịnh Vượng</h3>
+              <span class="text-sm mt-[4px]">Giá chỉ từ 799k</span>
+              <p class="text-sm text-[#fdc97d] my-3 italic">Xem ngay >></p>
+            </div>
           </div>
-          <div class="banner-info text-left p-4 group-hover:-translate-y-8 transition duration-300">
-            <h3 class="text-lg font-[800]">Bộ quà Tài Lộc</h3>
-            <span class="text-sm mt-[4px]">Giá chỉ từ 999k</span>
-            <p class="text-sm text-[#fdc97d] my-3 italic">Xem ngay >></p>
+        </router-link>
+
+        <router-link to="/collection/all" class="flex-shrink-0 w-[70%] snap-start">
+          <div class="promo-box group overflow-hidden">
+            <div class="overflow-hidden">
+              <img
+                class="group-hover:scale-105 w-full aspect-[382/574] object-cover transition duration-300"
+                loading="lazy"
+                src="https://bizweb.dktcdn.net/thumb/large/100/506/650/themes/944598/assets/img_4banner_4.jpg?1739018973665"
+                alt="Bộ quà Tài Lộc"
+              />
+            </div>
+            <div
+              class="banner-info text-left p-4 group-hover:-translate-y-8 transition duration-300"
+            >
+              <h3 class="text-lg font-[800]">Bộ quà Tài Lộc</h3>
+              <span class="text-sm mt-[4px]">Giá chỉ từ 999k</span>
+              <p class="text-sm text-[#fdc97d] my-3 italic">Xem ngay >></p>
+            </div>
           </div>
-        </div>
+        </router-link>
       </div>
     </div>
   </div>

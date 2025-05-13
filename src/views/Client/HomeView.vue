@@ -9,6 +9,11 @@
       title="Yến sào Sudes Nest"
       mainText="Tổ Yến"
     />
+    <CategorySection
+      categoryId="67eb682ca07153fe3bf1ffaf"
+      title="Yến sào Sudes Nest"
+      mainText="Yến Chưng Tươi"
+    />
     <WhyChoiseSection />
     <FeedBackSection />
     <BrandSection />

@@ -4,7 +4,7 @@
       <!-- 404 Illustration -->
       <div class="relative">
         <svg
-          class="w-64 h-64 mx-auto animate-pulse"
+          class="w-64 h-64 mx-auto animate-pulse-custom"
           viewBox="0 0 200 200"
           xmlns="http://www.w3.org/2000/svg"
         >
@@ -126,7 +126,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.animate-pulse {
+.animate-pulse-custom {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
@@ -138,5 +138,10 @@ onMounted(() => {
   50% {
     opacity: 0.7;
   }
+}
+
+.btn-scale:hover {
+  transform: scale(1.05);
+  transition: transform 0.2s ease;
 }
 </style>

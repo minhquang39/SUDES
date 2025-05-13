@@ -12,7 +12,10 @@
         {{ product.name }}
       </p>
       <div class="flex justify-center items-center gap-2 py-2">
-        <p class="text-gray-500 line-through text-xs md:text-sm">
+        <p
+          v-if="product.variants[0].oldPrice > 0"
+          class="text-gray-500 line-through text-xs md:text-sm"
+        >
           {{ formatCurrency(product.variants[0].oldPrice) }}₫
         </p>
         <p class="text-price font-bold text-sm md:text-xl">

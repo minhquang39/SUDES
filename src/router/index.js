@@ -14,8 +14,11 @@ import OTPView from '@/views/Client/OTPView.vue'
 import NotFoundView from '@/views/Client/NotFoundView.vue'
 import ForgotPasswordView from '@/views/Client/ForgotPasswordView.vue'
 import ResetPasswordView from '@/views/Client/ResetPasswordView.vue'
+import ThankYouView from '@/views/Client/ThankYou.vue'
 import AdminLogin from '@/views/Admin/AdminLogin.vue'
 import DashBoard from '@/views/Admin/DashBoard.vue'
+import AdminLoadingScreen from '@/views/Admin/AdminLoadingScreen.vue'
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -36,6 +39,33 @@ const router = createRouter({
           path: '/:slug',
           name: 'product-detail',
           component: () => import('@/views/Client/ProductDetail.vue'),
+          meta: {
+            isHeader: true,
+            isFooter: true,
+          },
+        },
+        {
+          path: '/search',
+          name: 'search',
+          component: () => import('@/views/Client/SearchDetail.vue'),
+          meta: {
+            isHeader: true,
+            isFooter: true,
+          },
+        },
+        {
+          path: '/danh-muc/:slug',
+          name: 'category-detail',
+          component: () => import('@/views/Client/CategoryDetail.vue'),
+          meta: {
+            isHeader: true,
+            isFooter: true,
+          },
+        },
+        {
+          path: '/collection/all',
+          name: 'all-product',
+          component: () => import('@/views/Client/AllProduct.vue'),
           meta: {
             isHeader: true,
             isFooter: true,
@@ -114,6 +144,16 @@ const router = createRouter({
           },
         },
         {
+          path: '/order/:id',
+          name: 'order-detail',
+          component: () => import('@/views/Client/OrderDetail.vue'),
+          meta: {
+            requiresAuth: true,
+            isHeader: true,
+            isFooter: true,
+          },
+        },
+        {
           path: '/chinh-sach/:policySlug',
           name: 'policy',
           component: () => import('@/views/Client/PolicyView.vue'),
@@ -121,6 +161,36 @@ const router = createRouter({
             requiresAuth: false,
             isHeader: true,
             isFooter: true,
+          },
+        },
+        {
+          path: '/cart',
+          name: 'cart',
+          component: () => import('@/views/Client/Cart.vue'),
+          meta: {
+            requiresAuth: false,
+            isHeader: true,
+            isFooter: true,
+          },
+        },
+        {
+          path: '/checkout',
+          name: 'checkout',
+          component: () => import('@/views/Client/CheckOut.vue'),
+          meta: {
+            requiresAuth: true,
+            isHeader: false,
+            isFooter: false,
+          },
+        },
+        {
+          path: '/thank-you',
+          name: 'thank-you',
+          component: () => import('@/views/Client/ThankYou.vue'),
+          meta: {
+            requiresAuth: true,
+            isHeader: false,
+            isFooter: false,
           },
         },
       ],
@@ -137,6 +207,14 @@ const router = createRouter({
           component: AdminLogin,
         },
         {
+          path: 'loading',
+          name: 'admin-loading',
+          component: AdminLoadingScreen,
+          meta: {
+            requiresAdmin: false,
+          },
+        },
+        {
           path: 'dashboard',
           name: 'admin-dashboard',
           component: DashBoard,
@@ -144,6 +222,14 @@ const router = createRouter({
             requiresAdmin: true,
           },
           children: [
+            {
+              path: 'home',
+              name: 'admin-home',
+              component: () => import('@/views/Admin/Home.vue'),
+              meta: {
+                requiresAdmin: true,
+              },
+            },
             {
               path: 'blog/list',
               name: 'admin-blog-list',
@@ -195,7 +281,38 @@ const router = createRouter({
             {
               path: 'product/new',
               name: 'new-product',
-              component: () => import('@/views/Admin/Product/AddProduct.vue'),
+              component: () => import('@/views/Admin/Product/ProductForm.vue'),
+              meta: {
+                requiresAdmin: true,
+              },
+            },
+            {
+              path: 'product/edit/:id',
+              component: () => import('@/views/Admin/Product/ProductForm.vue'),
+              meta: {
+                requiresAdmin: true,
+              },
+            },
+            {
+              path: 'products',
+              name: 'product-list',
+              component: () => import('@/views/Admin/Product/ProductList.vue'),
+              meta: {
+                requiresAdmin: true,
+              },
+            },
+            {
+              path: 'users',
+              name: 'user-list',
+              component: () => import('@/views/Admin/User/User.vue'),
+              meta: {
+                requiresAdmin: true,
+              },
+            },
+            {
+              path: 'orders',
+              name: 'order-list',
+              component: () => import('@/views/Admin/OrderList.vue'),
               meta: {
                 requiresAdmin: true,
               },
@@ -218,12 +335,23 @@ const router = createRouter({
 
 // GOOD
 router.beforeEach((to, from, next) => {
+  console.log('Điều hướng đến:', to.path)
   const authStore = useAuthStore()
+
+  // Đặc biệt xử lý cho trang loading
+  if (to.name === 'admin-loading') {
+    console.log('Cho phép truy cập trang loading')
+    return next()
+  }
+
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
+    console.log('Yêu cầu đăng nhập, chuyển hướng đến trang login')
     next({ name: 'login' })
   } else if (to.meta.requiresAdmin && (!authStore.isAuthenticated || !authStore.isAdmin)) {
+    console.log('Yêu cầu quyền admin, chuyển hướng đến trang admin-login')
     next({ name: 'admin-login' })
   } else {
+    console.log('Cho phép điều hướng đến:', to.path)
     next()
   }
 })

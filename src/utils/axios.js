@@ -48,7 +48,7 @@ apiClient.interceptors.response.use(
     if (error.response?.status === 401) {
       // Token expired or invalid
       localStorage.removeItem('token')
-      window.location.href = '/login'
+      window.location.href = '/account/login'
     } else if (error.response?.status === 403) {
       // Forbidden
       console.error('Access forbidden')

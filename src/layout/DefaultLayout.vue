@@ -2,7 +2,7 @@
   <div>
     <Header v-if="showHeader" />
     <div class="overflow-hidden">
-      <router-view></router-view>
+      <router-view :key="$route.fullPath"></router-view>
     </div>
     <Footer v-if="showFooter" />
   </div>

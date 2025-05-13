@@ -111,10 +111,15 @@
                 <span class="text-xl font-bold text-price"
                   >{{ formatPrice(productVariants[currentVariant].price) }}đ</span
                 >
-                <span class="text-[16px] font-normal line-through text-gray-400"
+                <span
+                  v-if="productVariants[currentVariant].oldPrice"
+                  class="text-[16px] font-normal line-through text-gray-400"
                   >{{ formatPrice(productVariants[currentVariant].oldPrice) }}đ</span
                 >
-                <div class="text-white text-xs px-1 bg-price rounded-xs relative after saletag">
+                <div
+                  v-if="productVariants[currentVariant].oldPrice"
+                  class="text-white text-xs px-1 bg-price rounded-xs relative after saletag"
+                >
                   -{{
                     Math.ceil(
                       ((productVariants[currentVariant].oldPrice -
@@ -128,7 +133,9 @@
               <div v-if="productVariants && productVariants.length > 1" class="mt-4">
                 <div class="flex items-center gap-2 mb-2">
                   <span>Phân loại: </span>
-                  <span>{{ productVariants[currentVariant]?.name || '' }}</span>
+                  <span class="text-mainColor font-bold">{{
+                    productVariants[currentVariant]?.name || ''
+                  }}</span>
                 </div>
                 <div class="flex flex-wrap gap-2">
                   <div
@@ -145,7 +152,10 @@
             </div>
             <!-- quantity  -->
             <div class="flex gap-4 flex-col md:flex-row">
-              <div class="flex items-center gap-2 py-5 md:py-0">
+              <div
+                v-if="productVariants && productVariants[currentVariant]?.stock"
+                class="flex items-center gap-2 py-5 md:py-0"
+              >
                 <span id="quantity-label" class="font-bold text-mainColor">Số lượng:</span>
                 <div class="flex items-center" aria-labelledby="quantity-label">
                   <button
@@ -173,7 +183,10 @@
                 </div>
               </div>
 
-              <div class="flex gap-4">
+              <div
+                v-if="productVariants && productVariants[currentVariant]?.stock"
+                class="flex gap-4"
+              >
                 <button
                   class="p-1 bg-mainColor hover:bg-hover cursor-pointer text-white rounded hover:opacity-90"
                   aria-label="Mua ngay sản phẩm này"
@@ -181,10 +194,19 @@
                   <div class="px-4 py-1 border border-gray-100 font-medium">Mua ngay</div>
                 </button>
                 <button
+                  @click="addToCart()"
                   class="p-1 bg-subColor hover:bg-hover text-mainColor hover:text-white cursor-pointer rounded hover:opacity-90"
                   aria-label="Mua ngay sản phẩm này"
                 >
                   <div class="px-4 py-1 border border-white font-[500]">Thêm vào giỏ</div>
+                </button>
+              </div>
+              <div v-else>
+                <button
+                  class="p-1 bg-gray-500 text-white cursor-not-allowed disabled:opacity-50 rounded hover:opacity-90"
+                  aria-label="Mua ngay sản phẩm này"
+                >
+                  <div class="px-4 py-1 border border-white font-[700] uppercase">Hết hàng</div>
                 </button>
               </div>
             </div>
@@ -220,7 +242,7 @@
                   class="description-content"
                   ref="descriptionContent"
                 >
-                  <div v-html="product?.description || ''"></div>
+                  <div v-html="product?.description || ''" ref="quillContent"></div>
                 </div>
                 <div
                   v-if="hasLongContent && !isExpanded"
@@ -257,6 +279,9 @@ import { ref, onMounted, onUnmounted, computed, watch, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import apiClient from '@/utils/axios'
+import { useCartStore } from '@/stores/cart'
+import { useToast } from 'vue-toast-notification'
+import 'vue-toast-notification/dist/theme-sugar.css'
 
 // Import Swiper styles
 import 'swiper/css'
@@ -273,6 +298,8 @@ export default {
     SwiperSlide,
   },
   setup() {
+    const $toast = useToast()
+
     const route = useRoute()
     const thumbsSwiper = ref(null)
     const mainSwiper = ref(null)
@@ -280,6 +307,7 @@ export default {
     const isMobile = ref(window.innerWidth < 768)
     const isAtBeginning = ref(true)
     const isAtEnd = ref(false)
+    const productId = ref(null)
 
     const product = ref({})
 
@@ -287,7 +315,6 @@ export default {
       mainSwiper.value = swiper
       swiper.on('slideChange', () => {
         activeThumbIndex.value = swiper.activeIndex
-        console.log('Main swiper active index:', activeThumbIndex.value)
       })
     }
 
@@ -316,7 +343,6 @@ export default {
         if (currentIndex > 0) {
           mainSwiper.value.slideTo(currentIndex - 1)
           // activeThumbIndex is updated via the slideChange event
-          console.log('Moving to previous image:', currentIndex - 1)
         }
       }
     }
@@ -327,7 +353,6 @@ export default {
         if (currentIndex < product.value.images.length - 1) {
           mainSwiper.value.slideTo(currentIndex + 1)
           // activeThumbIndex is updated via the slideChange event
-          console.log('Moving to next image:', currentIndex + 1)
         }
       }
     }
@@ -338,11 +363,11 @@ export default {
 
     onMounted(async () => {
       const slug = route.params.slug
-
       try {
         const response = await apiClient.get(`/admin/product/${slug}`)
         if (response.status === 200) {
           product.value = response.data.data || {}
+          productId.value = response.data.data._id
           // Reset currentVariant if product variants change
           currentVariant.value = 0
         }
@@ -352,6 +377,7 @@ export default {
       }
 
       window.addEventListener('resize', handleResize)
+      window.scrollTo(0, 0)
     })
 
     onUnmounted(() => {
@@ -389,32 +415,98 @@ export default {
     const isExpanded = ref(false)
     const descriptionContent = ref(null)
     const hasLongContent = ref(false)
+    const quillContent = ref(null)
 
     const checkContentHeight = () => {
       nextTick(() => {
         if (descriptionContent.value) {
           const scrollHeight = descriptionContent.value.scrollHeight
           hasLongContent.value = scrollHeight > 300
-          console.log('Content height:', scrollHeight)
         }
       })
     }
 
     const toggleDescription = () => {
       isExpanded.value = !isExpanded.value
-      console.log('Toggle description:', isExpanded.value)
     }
 
-    onMounted(() => {
-      checkContentHeight()
-    })
+    // Function to fix Quill lists
+    const fixQuillLists = () => {
+      if (!quillContent.value) return
 
+      // Find all li elements with data-list="bullet"
+      const bulletItems = quillContent.value.querySelectorAll('li[data-list="bullet"]')
+      bulletItems.forEach((item) => {
+        item.style.listStyleType = 'disc'
+        item.style.display = 'list-item'
+        item.style.marginLeft = '1.5rem'
+      })
+
+      // Find all li elements with data-list="ordered"
+      const orderedItems = quillContent.value.querySelectorAll('li[data-list="ordered"]')
+      orderedItems.forEach((item) => {
+        item.style.listStyleType = 'decimal'
+        item.style.display = 'list-item'
+        item.style.marginLeft = '1.5rem'
+      })
+
+      // Style headings
+      const headings = quillContent.value.querySelectorAll('h2, h3')
+      headings.forEach((heading) => {
+        heading.style.fontWeight = 'bold'
+        heading.style.margin = '1rem 0'
+
+        if (heading.tagName === 'H2') {
+          heading.style.fontSize = '1.5rem'
+        } else {
+          heading.style.fontSize = '1.25rem'
+        }
+      })
+
+      // Style paragraphs
+      const paragraphs = quillContent.value.querySelectorAll('p')
+      paragraphs.forEach((p) => {
+        p.style.marginBottom = '1rem'
+      })
+    }
+
+    const cartStore = useCartStore()
+
+    const addToCart = () => {
+      const data = {
+        productId: productId.value,
+        quantity: quantity.value,
+        SKU: product.value.variants[currentVariant.value].sku,
+        price: product.value.variants[currentVariant.value].price,
+        image: product.value.images[0],
+        slug: product.value.slug,
+        name: product.value.name,
+      }
+      console.log(data)
+      cartStore.addToCart(data)
+      $toast.success('Đã thêm vào giỏ hàng', {
+        duration: 1000,
+        position: 'top-right',
+      })
+    }
+
+    // Watch for changes to the description
     watch(
       () => product.value?.description,
       () => {
-        checkContentHeight()
+        nextTick(() => {
+          checkContentHeight()
+          fixQuillLists()
+        })
       },
     )
+
+    onMounted(() => {
+      nextTick(() => {
+        checkContentHeight()
+        fixQuillLists()
+      })
+    })
 
     return {
       thumbsSwiper,
@@ -442,6 +534,10 @@ export default {
       hasLongContent,
       activeThumbIndex,
       handleThumbClick,
+      quillContent,
+      productId,
+      addToCart,
+      cartStore,
     }
   },
 }

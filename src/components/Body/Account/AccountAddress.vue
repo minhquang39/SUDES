@@ -373,8 +373,9 @@ import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import apiClient from '@/utils/axios'
 import { useToast } from 'vue-toast-notification'
-import { useAddressStore } from '@/stores/address'
 import { useAuthStore } from '@/stores/auth'
+import { useAddressStore } from '@/stores/address'
+
 import 'vue-toast-notification/dist/theme-sugar.css'
 const $toast = useToast()
 const isModalOpen = ref(false)

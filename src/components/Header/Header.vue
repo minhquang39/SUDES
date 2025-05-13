@@ -107,9 +107,16 @@
               <span class="text-[10px] hidden md:inline">Cửa hàng</span>
             </div>
             <User />
-            <div class="opacity-100 hover:opacity-75">
-              <ShoppingCartIcon class="size-7" />
-              <span class="text-[10px] hidden md:inline">Giỏ hàng</span>
+            <div class="opacity-100 hover:opacity-75 relative">
+              <router-link to="/cart">
+                <ShoppingCartIcon class="size-7" />
+                <span class="text-[10px] hidden md:inline">Giỏ hàng</span>
+                <span
+                  v-if="cartStore.cart.length > 0"
+                  class="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center"
+                  >{{ cartStore.cart.length }}</span
+                >
+              </router-link>
             </div>
             <div class="md:hidden" @click="isMenuOpen = true">
               <Bars3Icon class="size-7" />
@@ -151,7 +158,7 @@ import NavBarMobile from './NavBarMobile.vue'
 import { useRouter, useRoute } from 'vue-router'
 import User from './User.vue'
 import { MapPinIcon, ChevronDownIcon, ShoppingCartIcon, Bars3Icon } from '@heroicons/vue/24/solid'
-
+import { useCartStore } from '@/stores/cart'
 export default {
   components: {
     SearchBar,
@@ -213,6 +220,7 @@ export default {
     const onScroll = () => {
       isHideHeader.value = window.scrollY > 200
     }
+    const cartStore = useCartStore()
 
     return {
       events,
@@ -223,6 +231,7 @@ export default {
       route,
       onScroll,
       isHideHeader,
+      cartStore,
     }
   },
 }
