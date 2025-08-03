@@ -1,9 +1,12 @@
 <template>
-  <div v-if="!product">Đang tải</div>
+  <ProductDetailSkeleton v-if="!product || Object.keys(product).length === 0" />
   <div v-else class="bg-primaryBg py-2">
+    <!-- Breadcrumb -->
+    <BreadCrumb :product-data="product" />
+
     <div class="lg:px-11 xl:px-30">
-      <div class="bg-white px-[14px] md:p-6">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div class="">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white px-[14px] md:p-6">
           <!-- Product Images -->
           <div class="flex flex-col md:flex-row-reverse">
             <!-- Main gallery -->
@@ -84,10 +87,10 @@
 
             <!-- Product Status -->
             <div class="mb-4">
-              <p class="text-[16px] text-gray-600">
+              <p class="text-[16px] text-gray-600 font-bold">
                 Mã: <span class="text-mainColor">Đang cập nhật</span>
               </p>
-              <p class="text-[16px] text-gray-600">
+              <p class="text-[16px] text-gray-600 font-medium">
                 Thương hiệu: <span class="text-mainColor">Sudes Nest</span> | Tình trạng:
                 <span class="text-mainColor">{{
                   productVariants && productVariants[currentVariant]?.stock
@@ -98,7 +101,7 @@
             </div>
 
             <div
-              class="mb-6 p-4 border border-red-100 bg-red-50 rounded"
+              class="mb-6 p-4 border border-red-100 bg-red-300 rounded font-medium"
               v-html="product?.shortDescription || ''"
             ></div>
 
@@ -188,7 +191,7 @@
                 class="flex gap-4"
               >
                 <button
-                  class="p-1 bg-mainColor hover:bg-hover cursor-pointer text-white rounded hover:opacity-90"
+                  class="p-1 bg-mainColor hover:bg-hover cursor-pointer text-white rounded hover:opacity-90 hidden"
                   aria-label="Mua ngay sản phẩm này"
                 >
                   <div class="px-4 py-1 border border-gray-100 font-medium">Mua ngay</div>
@@ -214,58 +217,252 @@
         </div>
 
         <!-- Product Tabs -->
-        <div class="mt-8">
-          <!-- Tab Headers -->
-          <div class="flex border-b">
-            <button
-              v-for="(tab, index) in tabs"
-              :key="index"
-              @click="activeTab = tab.id"
-              class="px-6 py-3 font-medium text-sm uppercase"
-              :class="
-                activeTab === tab.id
-                  ? 'text-mainColor border-b-2 border-mainColor -mb-[2px]'
-                  : 'text-gray-600'
-              "
+        <div class="mt-8 bg-white px-[14px] md:p-6">
+          <div class="grid grid-cols-3 gap-4">
+            <div
+              class="col-span-3 md:col-span-2 border-r md:pr-4 border-[#eee]"
+              :class="{ 'col-span-3': !recentWatch }"
             >
-              {{ tab.name }}
-            </button>
-          </div>
-
-          <!-- Tab Content -->
-          <div class="py-6">
-            <!-- Mô tả sản phẩm -->
-            <div v-if="activeTab === 'description'" class="prose max-w-none">
-              <div class="relative">
-                <div
-                  :class="{ 'max-h-[300px] overflow-hidden': !isExpanded && hasLongContent }"
-                  class="description-content"
-                  ref="descriptionContent"
-                >
-                  <div v-html="product?.description || ''" ref="quillContent"></div>
-                </div>
-                <div
-                  v-if="hasLongContent && !isExpanded"
-                  class="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-white to-transparent pointer-events-none"
-                ></div>
-              </div>
-              <div class="text-center mt-4" v-if="hasLongContent">
+              <!-- Tab Headers -->
+              <div class="flex border-b-2 border-mainColor bg-[#f1f1f1]">
                 <button
-                  @click="toggleDescription"
-                  class="px-8 py-2 bg-[#052b21] text-white rounded-sm hover:opacity-90 inline-flex items-center justify-center gap-2"
+                  v-for="(tab, index) in tabs"
+                  :key="index"
+                  @click="activeTab = tab.id"
+                  class="px-6 py-3 font-bold text-sm uppercase cursor-pointer"
+                  :class="activeTab === tab.id ? 'text-white bg-mainColor ' : 'text-gray-600'"
                 >
-                  <span>{{ isExpanded ? 'Thu gọn' : 'Xem thêm' }}</span>
-                  <span class="text-xs" v-if="!isExpanded">▼</span>
-                  <span class="text-xs" v-else>▲</span>
+                  {{ tab.name }}
                 </button>
+              </div>
+
+              <!-- Tab Content -->
+              <div class="py-6">
+                <!-- Mô tả sản phẩm -->
+                <div v-if="activeTab === 'description'" class="prose max-w-none">
+                  <div class="relative">
+                    <div
+                      :class="{ 'max-h-[300px] overflow-hidden': !isExpanded && hasLongContent }"
+                      class="description-content"
+                      ref="descriptionContent"
+                    >
+                      <div
+                        v-html="product?.description || ''"
+                        ref="quillContent"
+                        class="text-base"
+                      ></div>
+                    </div>
+                    <div
+                      v-if="hasLongContent && !isExpanded"
+                      class="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-white to-transparent pointer-events-none"
+                    ></div>
+                  </div>
+                  <div class="text-center mt-4" v-if="hasLongContent">
+                    <button
+                      @click="toggleDescription"
+                      class="px-8 py-2 bg-[#052b21] text-white rounded-sm hover:opacity-90 inline-flex items-center justify-center gap-2"
+                    >
+                      <span>{{ isExpanded ? 'Thu gọn' : 'Xem thêm' }}</span>
+                      <span class="text-xs" v-if="!isExpanded">▼</span>
+                      <span class="text-xs" v-else>▲</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Hướng dẫn mua hàng -->
+                <div v-if="activeTab === 'instruct'" class="prose max-w-none text-base">
+                  <p>
+                    <strong>Bước 1</strong>: Truy cập website v&agrave; lựa chọn sản phẩm cần mua để
+                    mua h&agrave;ng
+                  </p>
+                  <p>
+                    <strong>Bước 2</strong>: Click v&agrave; sản phẩm muốn mua, m&agrave;n
+                    h&igrave;nh hiển thị ra pop up với c&aacute;c lựa chọn sau
+                  </p>
+                  <p>
+                    Nếu bạn muốn tiếp tục mua h&agrave;ng: Bấm v&agrave;o phần tiếp tục mua
+                    h&agrave;ng để lựa chọn th&ecirc;m sản phẩm v&agrave;o giỏ h&agrave;ng
+                  </p>
+                  <p>
+                    Nếu bạn muốn xem giỏ h&agrave;ng để cập nhật sản phẩm: Bấm v&agrave;o xem giỏ
+                    h&agrave;ng
+                  </p>
+                  <p>
+                    Nếu bạn muốn đặt h&agrave;ng v&agrave; thanh to&aacute;n cho sản phẩm n&agrave;y
+                    vui l&ograve;ng bấm v&agrave;o: Đặt h&agrave;ng v&agrave; thanh to&aacute;n
+                  </p>
+                  <p>
+                    <strong>Bước 3</strong>: Lựa chọn th&ocirc;ng tin t&agrave;i khoản thanh
+                    to&aacute;n
+                  </p>
+                  <p>
+                    Nếu bạn đ&atilde; c&oacute; t&agrave;i khoản vui l&ograve;ng nhập th&ocirc;ng
+                    tin t&ecirc;n đăng nhập l&agrave; email v&agrave; mật khẩu v&agrave;o mục
+                    đ&atilde; c&oacute; t&agrave;i khoản tr&ecirc;n hệ thống
+                  </p>
+                  <p>
+                    Nếu bạn chưa c&oacute; t&agrave;i khoản v&agrave; muốn đăng k&yacute; t&agrave;i
+                    khoản vui l&ograve;ng điền c&aacute;c th&ocirc;ng tin c&aacute; nh&acirc;n để
+                    tiếp tục đăng k&yacute; t&agrave;i khoản. Khi c&oacute; t&agrave;i khoản bạn sẽ
+                    dễ d&agrave;ng theo d&otilde;i được đơn h&agrave;ng của m&igrave;nh
+                  </p>
+                  <p>
+                    Nếu bạn muốn mua h&agrave;ng m&agrave; kh&ocirc;ng cần t&agrave;i khoản vui
+                    l&ograve;ng nhấp chuột v&agrave;o mục đặt h&agrave;ng kh&ocirc;ng cần t&agrave;i
+                    khoản
+                  </p>
+                  <p>
+                    <strong>Bước 4</strong>: Điền c&aacute;c th&ocirc;ng tin của bạn để nhận đơn
+                    h&agrave;ng, lựa chọn h&igrave;nh thức thanh to&aacute;n v&agrave; vận chuyển
+                    cho đơn h&agrave;ng của m&igrave;nh
+                  </p>
+                  <p>
+                    <strong>Bước 5</strong>: Xem lại th&ocirc;ng tin đặt h&agrave;ng, điền
+                    ch&uacute; th&iacute;ch v&agrave; gửi đơn h&agrave;ng
+                  </p>
+                  <p>
+                    Sau khi nhận được đơn h&agrave;ng bạn gửi ch&uacute;ng t&ocirc;i sẽ li&ecirc;n
+                    hệ bằng c&aacute;ch gọi điện lại để x&aacute;c nhận lại đơn h&agrave;ng
+                    v&agrave; địa chỉ của bạn.
+                  </p>
+                  <p>Tr&acirc;n trọng cảm ơn.</p>
+                </div>
+              </div>
+            </div>
+            <div
+              v-if="recentWatch && recentWatch.length > 0"
+              class="col-span-3 md:col-span-1"
+              :class="{ 'col-span-0': !recentWatch }"
+            >
+              <h2 class="text-lg font-bold uppercase mb-4">Bạn đã xem</h2>
+              <div class="flex flex-col gap-2">
+                <div v-for="(product, index) in recentWatch" :key="product._id">
+                  <router-link
+                    class="flex items-center gap-2 border-b border-gray-200 pb-2"
+                    :class="{ 'border-b-0': index === recentWatch.length - 1 }"
+                    :to="`/${product.slug}`"
+                  >
+                    <img :src="product.images[0]" alt="product image" class="w-20 h-20" />
+                    <div class="flex flex-col">
+                      <h3 class="text-sm font-medium">{{ product.name }}</h3>
+                      <div class="flex items-center gap-2">
+                        <p class="text-base font-bold text-red-500">
+                          {{ formatPrice(product.variants[0].price) }}đ
+                        </p>
+                        <span
+                          v-if="product.variants[0].oldPrice && product.variants[0].oldPrice > 0"
+                          class="text-sm text-gray-500 line-through"
+                          >{{ formatPrice(product.variants[0].oldPrice) }}đ</span
+                        >
+                      </div>
+                      <p class="text-sm text-gray-500 italic">Xem tất cả</p>
+                    </div>
+                  </router-link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mt-8 bg-white px-[14px] md:p-6">
+          <div class="flex flex-col gap-6">
+            <div class="flex items-center justify-between">
+              <h2 class="text-lg font-bold uppercase">Đánh giá sản phẩm</h2>
+              <div v-if="reviews && reviews.length > 0" class="text-sm text-gray-600">
+                {{ reviews.length }} đánh giá
               </div>
             </div>
 
-            <!-- Hướng dẫn mua hàng -->
+            <!-- Reviews List -->
+            <div v-if="reviews && reviews.length > 0" class="space-y-6">
+              <div
+                v-for="review in reviews"
+                :key="review.id"
+                class="border-b border-gray-100 pb-6 last:border-b-0 last:pb-0"
+              >
+                <div class="flex gap-4">
+                  <!-- User Avatar -->
+                  <div class="flex-shrink-0">
+                    <div v-if="review.userAvatar" class="w-10 h-10 rounded-full overflow-hidden">
+                      <img
+                        :src="review.userAvatar"
+                        :alt="review.userName"
+                        class="w-full h-full object-cover"
+                        @error="handleAvatarError"
+                      />
+                    </div>
+                    <div
+                      v-else
+                      class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center"
+                    >
+                      <span class="text-white font-medium text-sm">
+                        {{ getInitials(review.userName) }}
+                      </span>
+                    </div>
+                  </div>
 
-            <!-- Đánh giá -->
-            <div v-if="activeTab === 'reviews'" class="prose max-w-none">
-              <p>Nội dung đánh giá sản phẩm...</p>
+                  <!-- Review Content -->
+                  <div class="flex-1">
+                    <!-- User Info & Rating -->
+                    <div
+                      class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2"
+                    >
+                      <div>
+                        <h4 class="font-medium text-gray-900">{{ review.userName }}</h4>
+                        <p class="text-sm text-gray-500">
+                          {{ formatReviewDate(review.createdAt) }}
+                        </p>
+                      </div>
+
+                      <!-- Star Rating -->
+                      <div class="flex items-center gap-1">
+                        <div class="flex">
+                          <svg
+                            v-for="star in 5"
+                            :key="star"
+                            class="w-4 h-4"
+                            :class="star <= review.rating ? 'text-yellow-400' : 'text-gray-300'"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                            />
+                          </svg>
+                        </div>
+                        <span class="ml-1 text-sm font-medium text-gray-700"
+                          >{{ review.rating }}/5</span
+                        >
+                      </div>
+                    </div>
+
+                    <!-- Review Comment -->
+                    <div class="text-gray-700 leading-relaxed">
+                      <p>{{ review.comment }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Empty State -->
+            <div v-else class="text-center py-12">
+              <div class="mb-4">
+                <svg
+                  class="mx-auto h-12 w-12 text-gray-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1"
+                    d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
+                  />
+                </svg>
+              </div>
+              <h3 class="text-lg font-medium text-gray-900 mb-2">Chưa có đánh giá nào</h3>
+              <p class="text-gray-500">Hãy là người đầu tiên đánh giá sản phẩm này</p>
             </div>
           </div>
         </div>
@@ -280,8 +477,12 @@ import { useRoute } from 'vue-router'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import apiClient from '@/utils/axios'
 import { useCartStore } from '@/stores/cart'
+import { useRecentWatchStore } from '@/stores/recentwatch'
+import { useAuthStore } from '@/stores/auth'
 import { useToast } from 'vue-toast-notification'
 import 'vue-toast-notification/dist/theme-sugar.css'
+import ProductDetailSkeleton from '@/components/Skeleton/ProductDetailSkeleton.vue'
+import BreadCrumb from '@/components/Body/BreadCrumb.vue'
 
 // Import Swiper styles
 import 'swiper/css'
@@ -296,10 +497,13 @@ export default {
   components: {
     Swiper,
     SwiperSlide,
+    ProductDetailSkeleton,
+    BreadCrumb,
   },
   setup() {
     const $toast = useToast()
-
+    const authStore = useAuthStore()
+    const recentWatchStore = useRecentWatchStore()
     const route = useRoute()
     const thumbsSwiper = ref(null)
     const mainSwiper = ref(null)
@@ -308,8 +512,9 @@ export default {
     const isAtBeginning = ref(true)
     const isAtEnd = ref(false)
     const productId = ref(null)
-
+    const recentWatch = ref([])
     const product = ref({})
+    const reviews = ref([])
 
     const setMainSwiper = (swiper) => {
       mainSwiper.value = swiper
@@ -364,12 +569,25 @@ export default {
     onMounted(async () => {
       const slug = route.params.slug
       try {
-        const response = await apiClient.get(`/admin/product/${slug}`)
-        if (response.status === 200) {
-          product.value = response.data.data || {}
-          productId.value = response.data.data._id
+        await new Promise((resolve) => setTimeout(resolve, 1000))
+
+        const productResponse = await apiClient.get(`/admin/product/${slug}`)
+        if (productResponse.status === 200) {
+          product.value = productResponse.data.data || {}
+          console.log(product.value)
+          productId.value = productResponse.data.data._id
           // Reset currentVariant if product variants change
           currentVariant.value = 0
+          recentWatchStore.addRecentWatch(productId.value)
+
+          if (authStore.isAuthenticated) {
+            recentWatch.value = recentWatchStore.recentWatch
+            recentWatchStore.getRecentWatchFromApi()
+          }
+          const reviewResponse = await apiClient.get(`/account/product/${productId.value}/reviews`)
+          if (reviewResponse.status === 200) {
+            reviews.value = reviewResponse.data.data.reviews || []
+          }
         }
       } catch (error) {
         console.error('Error fetching product:', error)
@@ -377,7 +595,7 @@ export default {
       }
 
       window.addEventListener('resize', handleResize)
-      window.scrollTo(0, 0)
+      window.scrollTo(0, 0, { behavior: 'smooth' })
     })
 
     onUnmounted(() => {
@@ -404,12 +622,51 @@ export default {
 
     const tabs = [
       { id: 'description', name: 'Mô tả sản phẩm' },
-      { id: 'reviews', name: 'Đánh giá' },
+      { id: 'instruct', name: 'Hướng dẫn mua hàng' },
     ]
     const activeTab = ref('description')
 
     const formatPrice = (price) => {
       return new Intl.NumberFormat('vi-VN').format(price)
+    }
+
+    // Function to get initials from user name
+    const getInitials = (name) => {
+      if (!name) return 'U'
+      const names = name.split(' ')
+      if (names.length >= 2) {
+        return (names[0][0] + names[names.length - 1][0]).toUpperCase()
+      }
+      return name[0].toUpperCase()
+    }
+
+    // Function to handle avatar load error
+    const handleAvatarError = (event) => {
+      event.target.style.display = 'none'
+      event.target.parentElement.style.display = 'none'
+      event.target.parentElement.nextElementSibling.style.display = 'flex'
+    }
+
+    // Format date for reviews (more detailed format)
+    const formatReviewDate = (dateString) => {
+      if (!dateString) return '-'
+      const date = new Date(dateString)
+      const now = new Date()
+      const diffInMs = now - date
+      const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24))
+
+      if (diffInDays === 0) {
+        return 'Hôm nay'
+      } else if (diffInDays === 1) {
+        return 'Hôm qua'
+      } else if (diffInDays < 7) {
+        return `${diffInDays} ngày trước`
+      } else if (diffInDays < 30) {
+        const weeks = Math.floor(diffInDays / 7)
+        return `${weeks} tuần trước`
+      } else {
+        return date.toLocaleDateString('vi-VN')
+      }
     }
 
     const isExpanded = ref(false)
@@ -478,6 +735,7 @@ export default {
         quantity: quantity.value,
         SKU: product.value.variants[currentVariant.value].sku,
         price: product.value.variants[currentVariant.value].price,
+        oldPrice: product.value.variants[currentVariant.value].oldPrice,
         image: product.value.images[0],
         slug: product.value.slug,
         name: product.value.name,
@@ -505,6 +763,7 @@ export default {
       nextTick(() => {
         checkContentHeight()
         fixQuillLists()
+        window.scrollTo(0, 0, { behavior: 'smooth' })
       })
     })
 
@@ -538,6 +797,11 @@ export default {
       productId,
       addToCart,
       cartStore,
+      recentWatch,
+      reviews,
+      getInitials,
+      handleAvatarError,
+      formatReviewDate,
     }
   },
 }

@@ -7,8 +7,6 @@
       <div class="flex flex-col items-center">
         <div class="relative">
           <div class="w-32 h-32 rounded-full overflow-hidden border-2 border-mainColor">
-            <!-- Loading overlay cho avatar -->
-
             <img
               v-if="avatarPreview"
               :src="avatarPreview"
@@ -16,7 +14,7 @@
               class="w-full h-full object-cover"
             />
             <img
-              v-else-if="authStore.user?.avatar"
+              v-else-if="authStore"
               :src="authStore.user.avatar"
               alt="Avatar"
               class="w-full h-full object-cover"
@@ -48,7 +46,6 @@
         <span class="mt-2 text-sm text-gray-500">Click vào ảnh để thay đổi</span>
       </div>
 
-      <!-- Phần nội dung thông tin tài khoản hiện có -->
       <div class="flex-1">
         <form @submit.prevent="updateInfo" class="bg-white rounded p-4 mb-4">
           <div v-if="errorMessage" class="mb-4 p-3 bg-red-100 text-red-700 rounded">
@@ -120,7 +117,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useToast } from 'vue-toast-notification'
 import apiClient from '@/utils/axios'
@@ -138,7 +135,10 @@ const firstName = ref(authStore.user?.first_name || '')
 const lastName = ref(authStore.user?.last_name || '')
 const phone = ref(authStore.user?.phone || '')
 const email = ref(authStore.user?.email || '')
-// Tính toán tên đầy đủ
+
+onMounted(() => {
+  console.log('authStore.user', authStore.user)
+})
 const fullName = computed(() => {
   if (authStore.user?.first_name && authStore.user?.last_name) {
     return `${authStore.user?.first_name} ${authStore.user?.last_name}`.trim()
@@ -146,7 +146,6 @@ const fullName = computed(() => {
   return authStore.user?.name || 'Chưa cập nhật'
 })
 
-// Hàm lấy chữ cái đầu từ tên để hiển thị khi không có avatar
 const getInitials = computed(() => {
   const firstName = authStore.user?.first_name || ''
   const lastName = authStore.user?.last_name || ''
@@ -203,7 +202,6 @@ const updateInfo = async () => {
     isLoading.value = true
     let hasUpdates = false
 
-    // 1. Cập nhật thông tin cá nhân
     if (firstName.value || lastName.value || phone.value) {
       const infoResponse = await apiClient.put('/account/update-info', {
         firstName: firstName.value,
@@ -213,7 +211,6 @@ const updateInfo = async () => {
 
       if (infoResponse.data) {
         hasUpdates = true
-        // Cập nhật thông tin trong store
         authStore.setUser({
           ...authStore.user,
           first_name: firstName.value,
@@ -223,7 +220,6 @@ const updateInfo = async () => {
       }
     }
 
-    // 2. Upload avatar nếu có
     if (fileInput.value && fileInput.value.files[0]) {
       isAvatarLoading.value = true
       const formData = new FormData()

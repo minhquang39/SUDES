@@ -6,15 +6,10 @@ import AdminLayout from '@/layout/AdminLayout.vue'
 import HomeView from '@/views/Client/HomeView.vue'
 import LoginView from '@/views/Client/LoginView.vue'
 import RegisterView from '@/views/Client/RegisterView.vue'
-import AccountView from '@/views/Client/AccountView.vue'
-import AccountInfo from '@/components/Body/Account/AccountInfo.vue'
-import AccountOrder from '@/components/Body/Account/AccountOrder.vue'
-import ChangePassword from '@/components/Body/Account/ChangePassword.vue'
 import OTPView from '@/views/Client/OTPView.vue'
 import NotFoundView from '@/views/Client/NotFoundView.vue'
 import ForgotPasswordView from '@/views/Client/ForgotPasswordView.vue'
 import ResetPasswordView from '@/views/Client/ResetPasswordView.vue'
-import ThankYouView from '@/views/Client/ThankYou.vue'
 import AdminLogin from '@/views/Admin/AdminLogin.vue'
 import DashBoard from '@/views/Admin/DashBoard.vue'
 import AdminLoadingScreen from '@/views/Admin/AdminLoadingScreen.vue'
@@ -33,6 +28,7 @@ const router = createRouter({
           meta: {
             isHeader: true,
             isFooter: true,
+            breadcrumb: 'Trang chủ',
           },
         },
         {
@@ -51,6 +47,7 @@ const router = createRouter({
           meta: {
             isHeader: true,
             isFooter: true,
+            breadcrumb: 'Tìm kiếm',
           },
         },
         {
@@ -69,6 +66,7 @@ const router = createRouter({
           meta: {
             isHeader: true,
             isFooter: true,
+            breadcrumb: 'Tất cả sản phẩm',
           },
         },
         {
@@ -78,6 +76,7 @@ const router = createRouter({
           meta: {
             isHeader: true,
             isFooter: true,
+            breadcrumb: 'Giới thiệu',
           },
         },
         {
@@ -87,6 +86,7 @@ const router = createRouter({
           meta: {
             isHeader: true,
             isFooter: true,
+            breadcrumb: 'Liên hệ',
           },
         },
         {
@@ -95,7 +95,8 @@ const router = createRouter({
           component: LoginView,
           meta: {
             isHeader: true,
-            isFooter: false,
+            isFooter: true,
+            breadcrumb: 'Đăng nhập',
           },
         },
         {
@@ -104,7 +105,8 @@ const router = createRouter({
           component: RegisterView,
           meta: {
             isHeader: true,
-            isFooter: false,
+            isFooter: true,
+            breadcrumb: 'Đăng ký',
           },
         },
         {
@@ -114,6 +116,7 @@ const router = createRouter({
           meta: {
             isHeader: false,
             isFooter: false,
+            breadcrumb: 'Xác thực OTP',
           },
         },
         {
@@ -123,6 +126,7 @@ const router = createRouter({
           meta: {
             isHeader: false,
             isFooter: false,
+            breadcrumb: 'Quên mật khẩu',
           },
         },
         {
@@ -132,8 +136,10 @@ const router = createRouter({
           meta: {
             isHeader: false,
             isFooter: false,
+            breadcrumb: 'Đặt lại mật khẩu',
           },
         },
+
         {
           path: '/account',
           name: 'account',
@@ -141,6 +147,7 @@ const router = createRouter({
           meta: {
             requiresAuth: true,
             isHeader: true,
+            breadcrumb: 'Tài khoản',
           },
         },
         {
@@ -161,6 +168,7 @@ const router = createRouter({
             requiresAuth: false,
             isHeader: true,
             isFooter: true,
+            breadcrumb: 'Chính sách',
           },
         },
         {
@@ -171,6 +179,7 @@ const router = createRouter({
             requiresAuth: false,
             isHeader: true,
             isFooter: true,
+            breadcrumb: 'Giỏ hàng',
           },
         },
         {
@@ -230,14 +239,7 @@ const router = createRouter({
                 requiresAdmin: true,
               },
             },
-            {
-              path: 'blog/list',
-              name: 'admin-blog-list',
-              component: () => import('@/views/Admin/BlogList.vue'),
-              meta: {
-                requiresAdmin: true,
-              },
-            },
+
             {
               path: 'policy/list',
               name: 'admin-policy-list',
@@ -333,25 +335,18 @@ const router = createRouter({
   ],
 })
 
-// GOOD
 router.beforeEach((to, from, next) => {
-  console.log('Điều hướng đến:', to.path)
   const authStore = useAuthStore()
 
-  // Đặc biệt xử lý cho trang loading
   if (to.name === 'admin-loading') {
-    console.log('Cho phép truy cập trang loading')
     return next()
   }
 
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
-    console.log('Yêu cầu đăng nhập, chuyển hướng đến trang login')
     next({ name: 'login' })
   } else if (to.meta.requiresAdmin && (!authStore.isAuthenticated || !authStore.isAdmin)) {
-    console.log('Yêu cầu quyền admin, chuyển hướng đến trang admin-login')
     next({ name: 'admin-login' })
   } else {
-    console.log('Cho phép điều hướng đến:', to.path)
     next()
   }
 })

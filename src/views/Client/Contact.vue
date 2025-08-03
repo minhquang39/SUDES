@@ -1,5 +1,6 @@
 <template>
-  <div class="bg-primaryBg py-10">
+  <div class="bg-primaryBg">
+    <BreadCrumb />
     <div class="flex flex-col md:flex-row gap-8 max-w-7xl lg:mx-11 xl:mx-30 px-4 py-8 bg-white">
       <!-- Thông tin liên hệ bên trái -->
       <div class="w-full md:w-1/3">
@@ -39,3 +40,7 @@
     </div>
   </div>
 </template>
+
+<script setup>
+import BreadCrumb from '@/components/Body/BreadCrumb.vue'
+</script>

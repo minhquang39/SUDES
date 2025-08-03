@@ -1,4 +1,4 @@
-<template>
+bun <template>
   <div class="min-h-screen bg-white flex flex-col items-center py-8 px-4">
     <div class="w-full max-w-6xl">
       <!-- Logo -->
@@ -41,7 +41,7 @@
             <input
               type="email"
               placeholder="Email"
-              value="dinhminhhquang913@gmail.com"
+              :value="authStore.user.email"
               disabled
               class="w-full border rounded-md p-2 bg-gray-200"
             />

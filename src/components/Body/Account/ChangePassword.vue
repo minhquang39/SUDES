@@ -62,22 +62,27 @@ const handleChangePassword = async () => {
     return
   }
 
+  if (oldPassword.value === '' || newPassword.value === '' || confirmPassword.value === '') {
+    alert('Vui lòng điền đầy đủ thông tin')
+    return
+  }
+
   try {
-    const { data } = await apiClient.post('/account/change-password', {
+    const response = await apiClient.post('/account/change-password', {
       email,
       oldPassword: oldPassword.value,
       newPassword: newPassword.value,
     })
-    if (data.success) {
+    if (response.data.success) {
       toast.open({
         message: 'Đổi mật khẩu thành công',
         type: 'success',
       })
     }
   } catch (error) {
-    console.log(error)
+    console.log(error.response.data)
     toast.open({
-      message: 'Đổi mật khẩu thất bại',
+      message: error.response.data.message || 'Đổi mật khẩu thất bại',
       type: 'error',
     })
   }

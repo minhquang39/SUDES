@@ -7,7 +7,7 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
 import Quill from 'quill'
-import 'quill/dist/quill.snow.css' // Hoặc quill.bubble.css cho giao diện bubble
+import 'quill/dist/quill.snow.css' 
 
 const props = defineProps({
   modelValue: {

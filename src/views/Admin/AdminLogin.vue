@@ -30,7 +30,6 @@
 
         <!-- Form đăng nhập -->
         <div class="bg-white rounded-lg shadow-md overflow-hidden">
-          <!-- Header -->
           <div class="bg-[#004337] text-white p-4">
             <h2 class="text-2xl font-bold text-center">Admin Login</h2>
             <p class="text-center text-green-100 mt-1">
@@ -133,11 +132,6 @@
             Need support? <a href="#" class="text-dark-green hover:underline">Contact IT team</a>
           </div>
         </div>
-
-        <!-- Copyright -->
-        <div class="text-center mt-6 text-gray-600 text-sm">
-          Bird's Nest Admin Portal © {{ new Date().getFullYear() }}
-        </div>
       </div>
     </div>
   </div>
@@ -169,9 +163,7 @@ const handleSignin = async () => {
       position: 'top-right',
       duration: 1000,
     })
-    console.log('Chuyển hướng đến trang loading...')
 
-    // Thêm một khoảng thời gian trước khi chuyển hướng
     setTimeout(() => {
       router.push('/admin/loading')
     }, 500)

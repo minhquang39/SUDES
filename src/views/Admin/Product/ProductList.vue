@@ -1,6 +1,5 @@
 <template>
   <div class="p-4">
-    <!-- Header với nút thêm -->
     <div class="flex justify-between items-center mb-4">
       <h1 class="text-2xl font-semibold text-blue-800">Quản lý sản phẩm</h1>
       <n-button type="primary" @click="handleAddProduct">
@@ -11,7 +10,6 @@
       </n-button>
     </div>
 
-    <!-- Bộ lọc -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
       <n-select
         v-model:value="selectedCategory"
@@ -32,13 +30,8 @@
       />
 
       <n-input-group>
-        <n-input
-          v-model:value="searchText"
-          placeholder="Tìm kiếm sản phẩm..."
-          clearable
-          @keyup.enter="handleSearch"
-        />
-        <n-button type="primary" @click="handleSearch">
+        <n-input v-model:value="searchText" placeholder="Tìm kiếm sản phẩm..." clearable />
+        <n-button type="primary">
           <template #icon>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -76,7 +69,6 @@ import { NButton, NDataTable, NIcon, NPopconfirm, NSelect, NInput, NInputGroup }
 import { TrashOutline, AddOutline, EyeOutline, PencilOutline, SearchSharp } from '@vicons/ionicons5'
 import apiClient from '@/utils/axios'
 
-// Hàm định dạng tiền với dấu chấm phân cách hàng nghìn
 function formatCurrency(amount) {
   if (!amount && amount !== 0) return ''
   return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + '₫'
@@ -84,65 +76,6 @@ function formatCurrency(amount) {
 
 function createColumns({ handleViewProduct, handleEditProduct, handleDeleteProduct }) {
   return [
-    {
-      type: 'expand',
-      width: 40,
-      fixed: 'left',
-      renderExpand: (row) => {
-        return h('div', { class: 'p-4 bg-gray-50' }, [
-          h('h3', { class: 'text-lg font-medium mb-3' }, 'Các phân loại sản phẩm'),
-          row.variants && row.variants.length > 0
-            ? h(
-                'div',
-                { class: 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4' },
-                row.variants.map((variant, index) => {
-                  return h(
-                    'div',
-                    { class: 'p-3 bg-white rounded shadow-sm border border-gray-200' },
-                    [
-                      h('div', { class: 'flex justify-between items-center mb-2' }, [
-                        h('span', { class: 'font-semibold' }, `Phân loại ${index + 1}`),
-                        h(
-                          'span',
-                          {
-                            class:
-                              variant.stock <= 10 ? 'text-red-500 font-medium' : 'text-green-600',
-                          },
-                          `Còn: ${variant.stock || 0}`,
-                        ),
-                      ]),
-                      h('div', { class: 'grid grid-cols-2 gap-1 text-sm' }, [
-                        h('div', [
-                          h('span', { class: 'text-gray-500' }, 'Giá: '),
-                          h(
-                            'span',
-                            { class: 'font-medium text-red-600' },
-                            formatCurrency(variant.price),
-                          ),
-                        ]),
-                        variant.oldPrice > 0 &&
-                          h('div', [
-                            h('span', { class: 'text-gray-500' }, 'Giá gốc: '),
-                            h(
-                              'span',
-                              { class: 'line-through text-gray-400' },
-                              formatCurrency(variant.oldPrice),
-                            ),
-                          ]),
-                        variant.sku &&
-                          h('div', { class: 'col-span-2' }, [
-                            h('span', { class: 'text-gray-500' }, 'SKU: '),
-                            h('span', {}, variant.sku),
-                          ]),
-                      ]),
-                    ],
-                  )
-                }),
-              )
-            : h('p', { class: 'text-gray-500' }, 'Sản phẩm không có phân loại'),
-        ])
-      },
-    },
     {
       title: 'Product',
       key: 'product',
@@ -196,7 +129,6 @@ function createColumns({ handleViewProduct, handleEditProduct, handleDeleteProdu
       align: 'center',
       width: 130,
       render(row) {
-        // Lấy giá thấp nhất và cao nhất nếu có nhiều variants
         if (row.variants && row.variants.length > 1) {
           const prices = row.variants.map((v) => parseFloat(v.price || 0))
           const minPrice = Math.min(...prices)
@@ -311,8 +243,6 @@ function createColumns({ handleViewProduct, handleEditProduct, handleDeleteProdu
   ]
 }
 
-const data = ref([])
-
 export default defineComponent({
   components: {
     NButton,
@@ -328,14 +258,11 @@ export default defineComponent({
     const message = useMessage()
     const loading = ref(true)
 
-    // Filter state
     const searchText = ref('')
     const selectedCategory = ref(null)
     const selectedSubCategory = ref(null)
-    const categories = ref([])
     const originalData = ref([])
 
-    // Filter options
     const categoryOptions = computed(() => {
       const uniqueCategories = [...new Set(originalData.value.map((item) => item.category))]
         .filter((category) => category && category !== 'N/A')
@@ -397,11 +324,10 @@ export default defineComponent({
         const rawData = response.data.data.product
         originalData.value = rawData.map((item, index) => ({
           ...item,
-          category: item.category?.[0]?.name || 'N/A', // nếu là object
+          category: item.category?.[0]?.name || 'N/A',
           subCategory: item.category?.[1]?.name || 'N/A',
-          stock: item.variants?.[0]?.stock || item.defaultStock || 0,
+          stock: item.variants?.[0]?.stock || 0,
         }))
-        data.value = [...originalData.value]
       } catch (error) {
         console.error('Error fetching products:', error)
       } finally {
@@ -429,7 +355,6 @@ export default defineComponent({
         await apiClient.delete(`/admin/product/${row._id}`)
         // Xóa sản phẩm khỏi danh sách hiện tại
         originalData.value = originalData.value.filter((item) => item._id !== row._id)
-        data.value = [...originalData.value]
         message.success('Xóa sản phẩm thành công')
       } catch (error) {
         console.error('Error deleting product:', error)
@@ -440,17 +365,11 @@ export default defineComponent({
     }
 
     function handleCategoryChange(value) {
-      // Reset sub-category when main category changes
       selectedSubCategory.value = null
     }
 
-    function handleSearch() {
-      // Implement any additional search logic if needed
-      console.log('Searching for:', searchText.value)
-    }
-
     return {
-      data,
+      originalData,
       columns: createColumns({ handleViewProduct, handleEditProduct, handleDeleteProduct }),
       pagination: {
         pageSize: 5,
@@ -468,7 +387,6 @@ export default defineComponent({
       subCategoryOptions,
       filteredData,
       handleCategoryChange,
-      handleSearch,
     }
   },
 })

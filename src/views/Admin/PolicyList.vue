@@ -1,7 +1,7 @@
 <template>
   <div class="">
     <!-- Header with title and add button -->
-    <div class="flex justify-between items-center">
+    <div class="flex justify-between items-center mb-10">
       <h1 class="text-2xl font-bold text-textColor">Quản lý chính sách</h1>
       <button
         @click="openAddPolicyForm"
@@ -179,7 +179,6 @@
       </div>
     </div>
 
-    <!-- Form Modal for Add/Edit Policy -->
     <div v-if="showForm" class="fixed inset-0 z-50 overflow-y-auto">
       <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20">
         <div
@@ -258,12 +257,11 @@
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
-import QuillEditor from '@/components/QuillEditor.vue' // Import QuillEditor component
+import QuillEditor from '@/components/QuillEditor.vue' 
 import apiClient from '@/utils/axios'
 import { useToast } from 'vue-toast-notification'
 import 'vue-toast-notification/dist/theme-sugar.css'
 const $toast = useToast()
-// Sample data
 const policies = ref(null)
 
 const showDeleteConfirm = ref(false)
@@ -417,7 +415,6 @@ onMounted(async () => {
 </script>
 
 <style>
-/* Tailwind's line-clamp utility for truncating text */
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;

@@ -140,31 +140,22 @@ const userName = computed(() => {
 })
 
 onMounted(() => {
-  console.log('AdminLoadingScreen đã được mount')
-
-  // Cập nhật thanh tiến trình chậm hơn
   const interval = setInterval(() => {
-    progress.value += 1 // Giảm từ 2 xuống 1 để tăng thời gian hiển thị
-    console.log('Progress:', progress.value)
+    progress.value += 1
 
-    // Thay đổi thông báo khi đạt đến các mốc tiến độ
     if (progress.value >= 30 && currentMessageIndex.value === 0) {
       currentMessageIndex.value = 1
-      console.log('Thay đổi thông báo:', loadingMessage.value)
     } else if (progress.value >= 70 && currentMessageIndex.value === 1) {
       currentMessageIndex.value = 2
-      console.log('Thay đổi thông báo:', loadingMessage.value)
     }
 
-    // Khi hoàn thành, chuyển hướng đến dashboard
     if (progress.value >= 100) {
       clearInterval(interval)
       setTimeout(() => {
-        console.log('Chuyển hướng từ loading đến dashboard')
         router.push('/admin/dashboard/home')
       }, 500)
     }
-  }, 50) // Tăng từ 30 lên 50ms để làm chậm tiến trình
+  }, 50)
 })
 </script>
 

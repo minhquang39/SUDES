@@ -1,6 +1,5 @@
 <template>
   <n-layout has-sider>
-    <!-- Admin Sidebar -->
     <n-layout-sider
       collapse-mode="width"
       :collapsed-width="64"
@@ -34,7 +33,7 @@
         >
           <div class="flex items-center gap-2">
             <n-icon size="18">
-              <LogOutOutline />
+              <ArrowRightOnRectangleIcon />
             </n-icon>
             <span v-if="!collapsed" class="font-medium">Đăng xuất</span>
           </div>
@@ -42,9 +41,7 @@
       </div>
     </n-layout-sider>
 
-    <!-- Main content -->
     <n-layout>
-      <!-- Page content -->
       <div class="p-6">
         <router-view></router-view>
       </div>
@@ -53,20 +50,19 @@
 </template>
 
 <script setup>
-import { ref, computed, h, onMounted } from 'vue'
+import { ref, h } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { NLayout, NLayoutSider, NMenu, NIcon, NButton, NPageHeader } from 'naive-ui'
+import { NLayout, NLayoutSider, NMenu, NIcon, NButton } from 'naive-ui'
 import {
-  HomeOutline,
-  BagOutline,
-  PeopleOutline,
-  DocumentTextOutline,
-  BagHandleOutline,
-  NewspaperOutline,
-  FolderOutline,
-  LogOutOutline,
-  ChevronDownOutline,
-} from '@vicons/ionicons5'
+  HomeIcon,
+  ShoppingBagIcon,
+  UsersIcon,
+  DocumentTextIcon,
+  ShoppingCartIcon,
+  NewspaperIcon,
+  FolderIcon,
+  ArrowRightOnRectangleIcon,
+} from '@heroicons/vue/24/outline'
 import { useAuthStore } from '@/stores/auth'
 
 const route = useRoute()
@@ -91,27 +87,27 @@ const menuOptions = [
   {
     label: 'Trang chủ',
     key: '/admin/dashboard/home',
-    icon: renderIcon(HomeOutline),
+    icon: renderIcon(HomeIcon),
   },
   {
     label: 'Đơn hàng',
     key: '/admin/dashboard/orders',
-    icon: renderIcon(BagOutline),
+    icon: renderIcon(ShoppingBagIcon),
   },
   {
     label: 'Người dùng',
     key: '/admin/dashboard/users',
-    icon: renderIcon(PeopleOutline),
+    icon: renderIcon(UsersIcon),
   },
   {
     label: 'Chính sách',
     key: '/admin/dashboard/policy/list',
-    icon: renderIcon(DocumentTextOutline),
+    icon: renderIcon(DocumentTextIcon),
   },
   {
     label: 'Sản phẩm',
     key: 'products',
-    icon: renderIcon(BagHandleOutline),
+    icon: renderIcon(ShoppingCartIcon),
     children: [
       {
         label: 'Danh sách sản phẩm',
@@ -126,7 +122,7 @@ const menuOptions = [
   {
     label: 'Bài viết',
     key: 'blog',
-    icon: renderIcon(NewspaperOutline),
+    icon: renderIcon(NewspaperIcon),
     children: [
       {
         label: 'Danh sách bài viết',
@@ -141,7 +137,7 @@ const menuOptions = [
   {
     label: 'Danh mục',
     key: 'categories',
-    icon: renderIcon(FolderOutline),
+    icon: renderIcon(FolderIcon),
     children: [
       {
         label: 'Danh sách danh mục',
@@ -163,57 +159,8 @@ const menuOptions = [
   },
 ]
 
-// Auto expand menu based on current route
-onMounted(() => {
-  // Set active key based on current route
-  activeKey.value = route.path
-})
-
 function logout() {
-  // Sử dụng phương thức logout có sẵn trong authStore
   authStore.logout()
-
-  // Chuyển hướng người dùng về trang đăng nhập admin
   router.push('/admin/login')
 }
 </script>
-
-<style scoped>
-/* Optional: Add transitions for smoother experience */
-.max-h-0 {
-  max-height: 0;
-}
-
-.max-h-40 {
-  max-height: 10rem;
-}
-
-.max-h-60 {
-  max-height: 15rem;
-}
-
-/* Utility classes for custom colors */
-.bg-mainColor {
-  background-color: #0277bd; /* cyan-blue-600 */
-}
-
-.bg-subColor {
-  background-color: #38bdf8; /* sky-400 */
-}
-
-.text-subColor {
-  color: #bae6fd; /* sky-200 */
-}
-
-.text-textColor {
-  color: #0277bd; /* cyan-blue-600 */
-}
-
-.bg-primaryBg {
-  background-color: #ffffff; /* white */
-}
-
-.hover\:text-subColor:hover {
-  color: #bae6fd; /* sky-200 */
-}
-</style>

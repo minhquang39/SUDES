@@ -102,10 +102,6 @@
         <!--  -->
         <div class="col-span-6 sm:col-span-6 lg:col-span-3 order-2 lg:order-3">
           <div class="flex text-white justify-end items-center gap-4 lg:gap-8 px-[7px] lg:px-0">
-            <div class="opacity-100 hover:opacity-75 hidden md:block">
-              <MapPinIcon class="size-7" />
-              <span class="text-[10px] hidden md:inline">Cửa hàng</span>
-            </div>
             <User />
             <div class="opacity-100 hover:opacity-75 relative">
               <router-link to="/cart">

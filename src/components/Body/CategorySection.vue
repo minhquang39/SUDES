@@ -2,7 +2,7 @@
   <div class="py-[30px]">
     <h3 class="uppercase font-medium text-[#053024] text-center">{{ title }}</h3>
     <div class="flex justify-center">
-      <TextRoboto :content="mainText" class="hover:text-hover cursor-pointer" />
+      <TextRoboto :content="mainText" class="hover:text-hover cursor-pointer text-base" />
     </div>
     <div class="py-4">
       <TwoSquareSeperate />
@@ -17,7 +17,7 @@
           <div
             v-for="(subCategory, index) in firstFourCategories"
             :key="subCategory._id"
-            class="p-1 bg-[#fdc97d] text-mainColor hover:text-white font-[500] hover:cursor-pointer hover:bg-mainColor relative category whitespace-nowrap flex-shrink-0"
+            class="p-[2px] bg-[#fdc97d] text-mainColor hover:text-white font-semibold hover:cursor-pointer hover:bg-mainColor relative category whitespace-nowrap flex-shrink-0"
             @click="currentIndex = index"
             :class="{ active: currentIndex === index }"
           >
@@ -80,7 +80,6 @@ const props = defineProps({
 const currentIndex = ref(0)
 const category = ref(null)
 const products = ref(null)
-const productByCategory = ref(null)
 const categorySlug = ref(null)
 
 const displayProductCategory = computed(() => {
@@ -89,7 +88,6 @@ const displayProductCategory = computed(() => {
   )
 })
 
-// Computed property for first 4 categories
 const firstFourCategories = computed(() => {
   if (!category.value?.children) return []
   return category.value.children.slice(0, 4)

@@ -175,6 +175,10 @@ import { ref, onMounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import apiClient from '@/utils/axios'
+import { useToast } from 'vue-toast-notification'
+import 'vue-toast-notification/dist/theme-sugar.css'
+
+const $toast = useToast()
 
 const router = useRouter()
 const route = useRoute()
@@ -209,6 +213,18 @@ onMounted(async () => {
     const response = await apiClient.post('/account/send-otp', {
       email: email.value,
     })
+    if (response.data.success) {
+      $toast.success(response.data.message, {
+        position: 'top-right',
+        duration: 1000,
+        type: 'success',
+      })
+    } else {
+      $toast.error(response.data.message, {
+        position: 'top-right',
+        duration: 1000,
+      })
+    }
   }
 })
 
@@ -281,19 +297,34 @@ const handleVerifyCode = async () => {
 
     if (response.data.success) {
       if (type === 'reset-password') {
-        router.push('/account/reset-password')
+        setTimeout(() => {
+          router.push('/account/reset-password')
+        }, 1000)
       } else {
-        router.push('/account/login')
+        $toast.success(response.data.message, {
+          position: 'top-right',
+          duration: 1000,
+          type: 'success',
+        })
+        await new Promise((resolve) => setTimeout(resolve, 1000))
+        setTimeout(() => {
+          router.push('/account/login')
+        }, 1000)
       }
     }
   } catch (error) {
-    console.error('Error verifying OTP:', error)
+    $toast.error(error.response.data.message, {
+      position: 'top-right',
+      duration: 1000,
+      type: 'error',
+    })
   } finally {
     isLoading.value = false
   }
 }
 
 const handleResendCode = async () => {
+  // check if timer is less than 60 and isResending is false
   if (timer.value < 60 || isResending.value) return
 
   isResending.value = true
@@ -311,6 +342,19 @@ const handleResendCode = async () => {
         }
       }, 1000)
     }
+    if (response.data.success) {
+      $toast.success(response.data.message, {
+        position: 'top-right',
+        duration: 1000,
+        type: 'success',
+      })
+    } else {
+      $toast.error(response.data.message, {
+        position: 'top-right',
+        duration: 1000,
+        type: 'error',
+      })
+    }
   } catch (error) {
     console.error('Error resending OTP:', error)
   } finally {
@@ -318,7 +362,6 @@ const handleResendCode = async () => {
   }
 }
 
-// Thêm watch để tự động verify khi đủ 6 số
 watch([num1, num2, num3, num4, num5, num6], ([n1, n2, n3, n4, n5, n6]) => {
   const otp = `${n1}${n2}${n3}${n4}${n5}${n6}`
   if (otp.length === 6) {

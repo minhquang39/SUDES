@@ -1,5 +1,6 @@
 <template>
-  <div class="bg-[#f1e8d7] py-10">
+  <BreadCrumb />
+  <div class="bg-[#f1e8d7] text-base pb-10">
     <div class="p-5 mx-0 lg:mx-11 xl:mx-30 bg-white h-[300px]">
       <h2 class="text-[#333] font-bold text-[20px] uppercase mb-[16px]">Giới thiệu</h2>
       <p class="mb-[16px]">
@@ -24,3 +25,7 @@
     </div>
   </div>
 </template>
+
+<script setup>
+import BreadCrumb from '@/components/Body/BreadCrumb.vue'
+</script>

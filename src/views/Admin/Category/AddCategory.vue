@@ -23,7 +23,6 @@
         <div class="mb-6">
           <label class="block text-sm font-medium text-gray-700 mb-2">Ảnh danh mục</label>
           <div class="flex items-start space-x-4">
-            <!-- Image Preview -->
             <div class="relative group">
               <div
                 class="h-[180px] w-[180px] rounded-lg overflow-hidden bg-gray-100 border-2 border-dashed border-gray-300 flex items-center justify-center"
@@ -78,7 +77,6 @@
                 </template>
               </div>
 
-              <!-- File Input (hidden but accessible) -->
               <input
                 type="file"
                 accept="image/*"
@@ -86,44 +84,6 @@
                 @change="handleImageCategory($event)"
                 aria-label="Chọn ảnh danh mục"
               />
-            </div>
-
-            <!-- Upload Instructions -->
-            <div class="flex-1">
-              <p class="text-sm text-gray-500">Chọn ảnh cho danh mục</p>
-              <p class="text-xs text-gray-400 mt-1">Hỗ trợ JPG, PNG hoặc GIF. Tối đa 2MB.</p>
-
-              <div v-if="imageCategory" class="mt-2">
-                <p class="text-xs text-gray-600">
-                  <span class="font-medium">File: </span>{{ imageCategory.name }}
-                </p>
-                <p class="text-xs text-gray-600">
-                  <span class="font-medium">Kích thước: </span
-                  >{{ formatFileSize(imageCategory.size) }}
-                </p>
-              </div>
-
-              <button
-                type="button"
-                class="mt-3 inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                @click="triggerFileInput"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="-ml-0.5 mr-2 h-4 w-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                  />
-                </svg>
-                {{ imageCategory ? 'Thay đổi ảnh' : 'Tải ảnh lên' }}
-              </button>
             </div>
           </div>
         </div>
@@ -134,7 +94,7 @@
             v-if="type === 'update'"
             type="submit"
             class="w-full sm:w-auto flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
-            :disabled="isLoading || !name.trim()"
+            :disabled="isLoading"
           >
             <svg
               v-if="isLoading"
@@ -164,7 +124,7 @@
             v-else
             type="submit"
             class="w-full sm:w-auto flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
-            :disabled="isLoading || !name.trim()"
+            :disabled="isLoading"
           >
             <svg
               v-if="isLoading"
@@ -209,19 +169,14 @@ const imageCategoryPreview = ref(null)
 const isLoading = ref(false)
 const name = ref('')
 const formData = ref(null)
-const fileInput = ref(null)
 
 const type = computed(() => route.query.type)
 const id = computed(() => route.query.id)
-
-console.log(type.value)
-console.log(id.value)
 
 const handleImageCategory = (event) => {
   const file = event.target.files[0]
   if (!file) return
 
-  // Validate file size (max 2MB)
   if (file.size > 2 * 1024 * 1024) {
     $toast.error('Kích thước file quá lớn. Tối đa 2MB.', {
       position: 'top-right',
@@ -242,14 +197,6 @@ const handleImageCategory = (event) => {
   reader.readAsDataURL(file)
 }
 
-const formatFileSize = (bytes) => {
-  if (bytes === 0) return '0 Bytes'
-  const k = 1024
-  const sizes = ['Bytes', 'KB', 'MB', 'GB']
-  const i = Math.floor(Math.log(bytes) / Math.log(k))
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
-}
-
 const clearImage = () => {
   imageCategory.value = null
   imageCategoryPreview.value = null
@@ -261,14 +208,6 @@ const clearImage = () => {
   })
 }
 
-const triggerFileInput = () => {
-  // Programmatically click the hidden file input
-  const inputs = document.querySelectorAll('input[type="file"]')
-  if (inputs.length > 0) {
-    inputs[0].click()
-  }
-}
-
 const handleCreateCategory = async () => {
   if (!name.value.trim()) {
     $toast.warning('Vui lòng nhập tên danh mục', {
@@ -278,7 +217,6 @@ const handleCreateCategory = async () => {
     return
   }
 
-  // Update FormData with latest name value
   if (!formData.value) {
     formData.value = new FormData()
     formData.value.set('name', name.value)
@@ -299,20 +237,7 @@ const handleCreateCategory = async () => {
       clearImage()
     }
   } catch (error) {
-    console.log(error)
-    let errorMessage = 'Thêm danh mục thất bại'
-
-    if (error.response && error.response.data) {
-      if (typeof error.response.data === 'string') {
-        errorMessage = error.response.data
-      } else if (error.response.data.message) {
-        errorMessage = error.response.data.message
-      } else if (error.response.data.error) {
-        errorMessage = error.response.data.error
-      }
-    }
-
-    $toast.error(errorMessage, {
+    $toast.error('Thêm danh mục thất bại', {
       position: 'top-right',
       duration: 3000,
     })
@@ -351,8 +276,9 @@ onMounted(async () => {
   if (type.value === 'update') {
     const response = await apiClient.get(`/admin/category/parent/${id.value}`)
     if (response.status === 200) {
-      name.value = response.data.data.name
-      imageCategoryPreview.value = response.data.data.coverImage
+      console.log(response.data.data)
+      name.value = response.data.data.category.name
+      imageCategoryPreview.value = response.data.data.category.coverImage
     }
   }
 })

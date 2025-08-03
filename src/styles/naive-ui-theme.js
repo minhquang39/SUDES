@@ -1,6 +1,5 @@
 import { lightTheme, darkTheme } from 'naive-ui'
 
-// Tạo theme tùy chỉnh dựa trên lightTheme
 export const customLightTheme = {
   name: 'custom-light',
   common: {
@@ -16,7 +15,6 @@ export const customLightTheme = {
   ...lightTheme,
 }
 
-// Tạo theme tùy chỉnh dựa trên darkTheme
 export const customDarkTheme = {
   name: 'custom-dark',
   common: {

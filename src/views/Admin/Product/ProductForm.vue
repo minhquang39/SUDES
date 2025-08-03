@@ -250,7 +250,6 @@ const isLoading = ref(false)
 const productId = ref(route.params.id)
 console.log(productId.value)
 
-// Xác định mode thêm/sửa dựa trên route
 const isEditMode = computed(() => !!route.params.id)
 
 // Hàm format số tiền
@@ -281,7 +280,6 @@ const product = ref({
   imageFiles: [],
 })
 
-// Computed properties cho giá tiền đã format
 const formattedPrice = computed({
   get: () => formatCurrency(product.value.price),
   set: (value) => {
@@ -310,10 +308,10 @@ const currentCategory = (id) => {
 }
 
 // Quản lý phân loại sản phẩm
-const hasVariants = ref(false)
-const variantValues = ref([])
-const newVariantValue = ref('')
-const variantInputs = ref([])
+const hasVariants = ref(false) // Checkbox có sử dụng variant không
+const variantValues = ref([]) // Danh sách tên các variant ["Size S", "Size M", "Size L"]
+const newVariantValue = ref('') // Input tạm để thêm variant mới
+const variantInputs = ref([]) // Dữ liệu chi tiết của từng variant (sku, price, stock...)
 
 // Định nghĩa cột cho bảng phân loại
 const variantColumns = [
@@ -381,7 +379,6 @@ const productVariants = computed(() => {
   // Cập nhật variantInputs khi có thay đổi về số lượng variants
   if (variantInputs.value.length !== variantValues.value.length) {
     variantInputs.value = variantValues.value.map((value, index) => {
-      // Tìm giá trị cũ nếu có
       const existingVariant = variantInputs.value.find((v) => v.name === value)
       const newVariant = {
         name: value,
@@ -422,7 +419,6 @@ const hasVariantValues = computed(() => {
   return variantValues.value.length > 0
 })
 
-// Thêm watch để reset variantInputs khi tắt hasVariants
 watch(hasVariants, (newValue) => {
   if (!newValue) {
     variantInputs.value = []
@@ -447,7 +443,6 @@ const handleImageUpload = (options) => {
   const { file } = options
   const reader = new FileReader()
   reader.onload = (e) => {
-    // Kiểm tra số lượng ảnh không vượt quá 5
     if (!product.value.image) product.value.image = []
     if (!product.value.imageFiles) product.value.imageFiles = []
 
@@ -509,7 +504,7 @@ const fetchProduct = async () => {
       const variantNames = productData.variants.map((v) => v.name || '')
 
       // Lọc các giá trị không rỗng và không trùng lặp
-      variantValues.value = [...new Set(variantNames.filter((name) => name))]
+      variantValues.value = [...new Set(variantNames.filter((name) => name !== '' && name != null))]
 
       // Chuẩn bị dữ liệu variants
       variantInputs.value = productData.variants.map((v) => ({
@@ -621,9 +616,6 @@ const saveProduct = async () => {
 
     formData.append('variants', JSON.stringify(variantsToAdd))
 
-    for (const [key, value] of formData.entries()) {
-      console.log(key, value)
-    }
     let response
     if (isEditMode.value) {
       // Nếu là chỉnh sửa, gọi API PUT
@@ -634,7 +626,6 @@ const saveProduct = async () => {
       })
       message.success('Cập nhật sản phẩm thành công')
     } else {
-      // Nếu là thêm mới, gọi API POST
       response = await apiClient.post('/admin/product', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -643,7 +634,6 @@ const saveProduct = async () => {
       message.success('Thêm sản phẩm thành công')
     }
 
-    // Chuyển về trang danh sách sản phẩm
     router.push('/admin/dashboard/products')
   } catch (error) {
     console.error('Error saving product:', error)
@@ -666,7 +656,6 @@ onMounted(async () => {
     console.error('Error loading categories:', error)
   }
 
-  // Fetch product data if in edit mode
   await fetchProduct()
 })
 </script>

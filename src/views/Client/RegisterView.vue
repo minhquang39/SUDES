@@ -1,14 +1,9 @@
 <template>
-  <div class="bg-primaryBg">
+  <div class="bg-primaryBg min-h-screen overflow-y-auto">
+    <BreadCrumb />
     <div class="px-[14px] md:px-[45px]">
-      <div class="flex py-[10px] font-medium leading-[24px]">
-        <span>Trang chủ</span>
-        <span>></span>
-        <span>Đăng nhập tài khoản</span>
-      </div>
-      <div class="grid grid-cols-12 pt-[25px] pb-[40px]">
-        <div class="hidden md:block md:col-span-4"></div>
-        <div class="col-span-12 md:block md:col-span-4 bg-white px-[15px] py-[20px]">
+      <div class="flex justify-center items-start pt-[25px] pb-[40px]">
+        <div class="w-full max-w-[500px] bg-white px-[15px] py-[20px] rounded-lg shadow-sm">
           <div class="">
             <h1 class="text-center font-medium text-2xl uppercase mb-[20px]">Đăng ký</h1>
 
@@ -119,7 +114,6 @@
             </form>
           </div>
         </div>
-        <div class="hidden md:block md:col-span-4"></div>
       </div>
     </div>
   </div>
@@ -130,6 +124,9 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import apiClient from '@/utils/axios'
+import { useToast } from 'vue-toast-notification'
+import BreadCrumb from '@/components/Body/BreadCrumb.vue'
+const $toast = useToast()
 const router = useRouter()
 const authStore = useAuthStore()
 const firstName = ref('')
@@ -219,7 +216,6 @@ const handleRegister = async () => {
     })
 
     if (response.data.success) {
-      // Lưu email vào store để sử dụng ở trang verify
       authStore.setPendingEmail(email.value)
 
       // Hiển thị thông báo thành công
@@ -228,7 +224,6 @@ const handleRegister = async () => {
         duration: 3000,
       })
 
-      // Delay 2s trước khi chuyển hướng
       await new Promise((resolve) => setTimeout(resolve, 2000))
       router.push('/account/verify')
     } else {
@@ -255,22 +250,6 @@ const handleRegister = async () => {
     }
   } finally {
     isLoading.value = false
-  }
-}
-
-const handleGoogleLogin = async () => {
-  try {
-    // TODO: Implement Google OAuth login
-    $toast.info('Tính năng đăng nhập bằng Google đang được phát triển', {
-      position: 'top-right',
-      duration: 1000,
-    })
-  } catch (error) {
-    console.error('Google login error:', error)
-    $toast.error('Có lỗi xảy ra khi đăng nhập bằng Google', {
-      position: 'top-right',
-      duration: 1000,
-    })
   }
 }
 </script>

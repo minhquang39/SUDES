@@ -1,11 +1,7 @@
 <template>
   <div class="bg-primaryBg">
+    <BreadCrumb />
     <div class="px-[14px] md:px-[45px]">
-      <div class="flex py-[10px] font-medium leading-[24px]">
-        <span>Trang chủ</span>
-        <span>></span>
-        <span>Đăng nhập tài khoản</span>
-      </div>
       <div class="grid grid-cols-12 pt-[25px] pb-[80px]">
         <div class="hidden md:block md:col-span-4"></div>
         <div class="col-span-12 md:block md:col-span-4 bg-white px-[15px] py-[20px]">
@@ -93,21 +89,32 @@
 </template>
 
 <script setup>
+import BreadCrumb from '@/components/Body/BreadCrumb.vue'
 import { useToast } from 'vue-toast-notification'
 import 'vue-toast-notification/dist/theme-sugar.css'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { useCartStore } from '@/stores/cart'
+import { useAddressStore } from '@/stores/address'
+import { useRecentWatchStore } from '@/stores/recentwatch'
 import apiClient from '@/utils/axios'
 const $toast = useToast()
+
+// define store
 const authStore = useAuthStore()
 const cartStore = useCartStore()
+const addressStore = useAddressStore()
+const recentWatchStore = useRecentWatchStore()
+
+// define ref and router
 const router = useRouter()
 const email = ref('')
 const password = ref('')
 const error = ref('')
 const isLoading = ref(false)
+
+// handle login
 const handleLogin = async () => {
   if (!email.value || !password.value) {
     error.value = 'Vui lòng nhập email và mật khẩu'
@@ -133,48 +140,29 @@ const handleLogin = async () => {
     }
 
     // Xử lý response thành công
-    if (response.data.success) {
-      try {
-        // Lưu vào store và localStorage
-        authStore.login(response.data.data.token, response.data.data.user)
-        localStorage.setItem('token', response.data.data.token)
-        localStorage.setItem('user', JSON.stringify(response.data.data.user))
-
-        $toast.success('Đăng nhập thành công', {
-          position: 'top-right',
-          duration: 1000,
-        })
-        if (cartStore.cart.length > 0) {
-          await cartStore.mergeCart()
-        }
-        await cartStore.getCart()
-
-        setTimeout(() => {
-          router.push('/')
-        }, 1000)
-      } catch (error) {
-        console.error('Error saving auth data:', error) // Debug log
-        $toast.error('Có lỗi xảy ra khi lưu thông tin đăng nhập', {
-          position: 'top-right',
-          duration: 1000,
-        })
-      }
-    } else {
-      // Xử lý response không thành công từ server
-      console.error('Login failed:', response.data) // Debug log
-      $toast.error(response.data.message || 'Đăng nhập thất bại', {
-        position: 'top-right',
-        duration: 1000,
-      })
+    // Lưu vào store và localStorage
+    // console.log(response.data.data.user.address)
+    // addressStore.address = response.data.data.user.address || []
+    authStore.login(response.data.data.token, response.data.data.user)
+    localStorage.setItem('token', response.data.data.token)
+    localStorage.setItem('user', JSON.stringify(response.data.data.user))
+    recentWatchStore.recentWatch = response.data.data.user.recentlyViewedProducts
+    $toast.success('Đăng nhập thành công', {
+      position: 'top-right',
+      duration: 1000,
+    })
+    if (cartStore.cart.length > 0) {
+      await cartStore.mergeCart()
     }
+    await cartStore.getCart()
+
+    setTimeout(() => {
+      router.push('/')
+    }, 1000)
   } catch (err) {
-    console.error('Login error:', err) // Debug log
-    // Xử lý lỗi từ Axios
     if (err.response) {
-      // Server trả về lỗi với status code
       const { data } = err.response
 
-      // Xử lý các mã lỗi cụ thể
       switch (data.code) {
         case 1004:
           $toast.error('Mật khẩu không chính xác', {
@@ -189,18 +177,15 @@ const handleLogin = async () => {
           })
           break
         case 1002:
-          // Chỉ hiển thị toast warning và chuyển hướng
           $toast.warning('Vui lòng xác thực email trước khi đăng nhập', {
             position: 'top-right',
             duration: 3000,
           })
 
-          // Delay 2s trước khi chuyển hướng
           await new Promise((resolve) => setTimeout(resolve, 2000))
-          // Lưu email vào store thay vì query
           authStore.setPendingEmail(email.value)
           router.push('/account/verify')
-          return // Thêm return để không chạy vào finally block
+          return
         default:
           $toast.error(data.message || 'Đăng nhập thất bại', {
             position: 'top-right',
@@ -208,13 +193,11 @@ const handleLogin = async () => {
           })
       }
     } else if (err.request) {
-      // Không nhận được response từ server
       $toast.error('Không thể kết nối đến server. Vui lòng kiểm tra kết nối internet', {
         position: 'top-right',
         duration: 1000,
       })
     } else {
-      // Lỗi khi tạo request
       $toast.error('Có lỗi xảy ra khi gửi yêu cầu', {
         position: 'top-right',
         duration: 1000,

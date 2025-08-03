@@ -95,7 +95,6 @@ import 'vue-toast-notification/dist/theme-sugar.css'
 import { ChevronDownIcon, ChevronUpIcon, PencilIcon, TrashIcon } from '@heroicons/vue/24/solid'
 const categories = ref([])
 const router = useRouter()
-// Toggle show modal confirm
 const showConfirm = ref(false)
 const $toast = useToast()
 const subCategoryId = ref('')
@@ -140,13 +139,10 @@ const hanldeUpdateSubCategory = async (id) => {
 }
 
 const handleShowSubCategory = (id) => {
-  // Nếu subcategory đang mở, đóng nó
   if (showSubCategory.value[id]) {
     showSubCategory.value[id] = false
   } else {
-    // Đóng tất cả subcategories trước
     showSubCategory.value = showSubCategory.value.map(() => false)
-    // Mở subcategory được chọn
     showSubCategory.value[id] = true
   }
 }

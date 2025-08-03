@@ -28,9 +28,9 @@ import {
 import { customLightTheme } from '@/styles/naive-ui-theme'
 import '@/assets/styles/animations.css'
 
-// Sử dụng theme tùy chỉnh
+
 const theme = ref(customLightTheme)
 
-// Cung cấp các dịch vụ Naive UI cho bất kỳ component nào
+
 provide('naive-ui-theme', theme)
 </script>

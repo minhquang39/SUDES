@@ -28,8 +28,13 @@
             <div class="mb-2">
               <button
                 :id="address?._id"
-                @click.prevent="openModalUpdate($event)"
-                class="font-bold text-sm cursor-pointer"
+                @click.stop.prevent="openModalUpdate($event)"
+                :class="[
+                  'font-bold text-sm transition-opacity duration-200',
+                  isModalTransitioning
+                    ? 'pointer-events-none opacity-50'
+                    : 'cursor-pointer hover:text-blue-600',
+                ]"
               >
                 Chỉnh sửa
               </button>
@@ -72,8 +77,13 @@
               <div class="mb-2">
                 <button
                   :id="address?._id"
-                  @click.prevent="openModalUpdate($event)"
-                  class="font-bold text-[16px] cursor-pointer"
+                  @click.stop.prevent="openModalUpdate($event)"
+                  :class="[
+                    'font-bold text-[16px] transition-opacity duration-200',
+                    isModalTransitioning
+                      ? 'pointer-events-none opacity-50'
+                      : 'cursor-pointer hover:text-blue-600',
+                  ]"
                 >
                   Chỉnh sửa
                 </button>
@@ -92,8 +102,13 @@
     </div>
     <div class="h-full">
       <div
-        @click="openModal"
-        class="uppercase text-mainColor font-bold p-2 text-center border border-dashed hover:bg-[#fdc97d] hover:text-white cursor-pointer w-full transition-all duration-300"
+        @click.stop="openModal"
+        :class="[
+          'uppercase text-mainColor font-bold p-2 text-center border border-dashed w-full transition-colors duration-200 add-address-btn',
+          isModalTransitioning
+            ? 'pointer-events-none opacity-80'
+            : 'hover:bg-[#fdc97d] hover:text-white cursor-pointer',
+        ]"
       >
         Thêm địa chỉ mới
       </div>
@@ -101,270 +116,273 @@
 
     <!-- Modal Add Address -->
 
-    <div
-      v-if="isModalOpen"
-      class="fixed inset-0 z-50 overflow-y-auto"
-      @click="closeModalOnOverlay($event)"
-    >
-      <div class="fixed inset-0 bg-black/50 transition-opacity"></div>
+    <Transition name="modal">
+      <div
+        v-if="isModalOpen"
+        class="fixed inset-0 z-50 overflow-y-auto modal-overlay"
+        @click="closeModalOnOverlay($event)"
+      >
+        <div class="fixed inset-0 bg-black/50 modal-backdrop"></div>
 
-      <!-- Modal container -->
-      <div class="flex min-h-full items-center justify-center md:p-4 modal-container">
-        <div
-          class="bg-white rounded-lg shadow-xl w-screen md:w-[700px] md:max-w-[90%] md:mx-4 relative transform transition-all"
-        >
-          <!-- Header -->
-          <div class="flex justify-between items-center p-4 border-b">
-            <p class="text-lg font-medium text-gray-800">Địa chỉ giao hàng</p>
-            <button @click="closeModal" class="p-2 hover:bg-gray-100 rounded-full transition-all">
-              <span class="text-gray-600 text-xl">&times;</span>
-            </button>
-          </div>
+        <!-- Modal container -->
+        <div class="flex min-h-full items-center justify-center md:p-4 modal-container">
+          <div
+            class="bg-white rounded-lg shadow-xl w-screen md:w-[700px] md:max-w-[90%] md:mx-4 relative transform modal-content"
+            @click.stop
+          >
+            <!-- Header -->
+            <div class="flex justify-between items-center p-4 border-b">
+              <p class="text-lg font-medium text-gray-800">Địa chỉ giao hàng</p>
+              <button @click="closeModal" class="p-2 hover:bg-gray-100 rounded-full transition-all">
+                <span class="text-gray-600 text-xl">&times;</span>
+              </button>
+            </div>
 
-          <!-- Form -->
-          <div class="p-6">
-            <form @submit.prevent="" class="space-y-4">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Form -->
+            <div class="p-6">
+              <form @submit.prevent="" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label for="name" class="block text-[12px] font-medium text-gray-700 mb-1"
+                      >Họ tên</label
+                    >
+                    <input
+                      type="text"
+                      id="name"
+                      v-model="name"
+                      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-mainColor focus:border-mainColor"
+                    />
+                    <p class="text-red-500 text-[12px]">{{ getError.nameError }}</p>
+                  </div>
+                  <div>
+                    <label for="phone" class="block text-[12px] font-medium text-gray-700 mb-1"
+                      >Số điện thoại</label
+                    >
+                    <input
+                      type="text"
+                      id="phone"
+                      v-model="phone"
+                      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-mainColor focus:border-mainColor"
+                    />
+                    <p class="text-red-500 text-[12px]">{{ getError.phoneError }}</p>
+                  </div>
+                </div>
+
                 <div>
-                  <label for="name" class="block text-[12px] font-medium text-gray-700 mb-1"
-                    >Họ tên</label
+                  <label for="email" class="block text-[12px] font-medium text-gray-700 mb-1"
+                    >Email</label
                   >
                   <input
-                    type="text"
-                    id="name"
-                    v-model="name"
+                    type="email"
+                    id="email"
+                    v-model="email"
                     class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-mainColor focus:border-mainColor"
                   />
-                  <p class="text-red-500 text-[12px]">{{ getError.nameError }}</p>
+                  <p class="text-red-500 text-[12px]">{{ getError.emailError }}</p>
                 </div>
-                <div>
-                  <label for="phone" class="block text-[12px] font-medium text-gray-700 mb-1"
-                    >Số điện thoại</label
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:pb-4">
+                  <div class="relative mt-16 md:mt-0">
+                    <label for="city" class="block text-[12px] font-medium text-gray-700 mb-1"
+                      >Tỉnh/Thành phố</label
+                    >
+                    <input
+                      type="text"
+                      class="absolute px-1 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-mainColor focus:border-mainColor z-10"
+                      v-model="provinceInput"
+                      placeholder="Chọn tỉnh/thành phố"
+                      @focus="provinceSelect = true"
+                      @input="searchProvince($event)"
+                    />
+
+                    <ul
+                      v-if="provinceSelect"
+                      class="w-full overflow-y-auto absolute top-[calc(100%+50px)] left-0 bg-white border border-gray-50 shadow provinceSelect z-50"
+                      :class="!provinceFilter ? 'h-[200px]' : 'h-fit'"
+                    >
+                      <div v-if="provinceFilter" class="max-h-fit">
+                        <li
+                          v-for="(p, index) in provinceFilter"
+                          :key="index"
+                          :name="p.name"
+                          class="p-2 hover:bg-gray-100 cursor-pointer"
+                          @click="selectProvince($event)"
+                        >
+                          {{ p.name }}
+                        </li>
+                      </div>
+                      <div v-else>
+                        <li
+                          v-for="(province, index) in addresses"
+                          :key="index"
+                          :name="province.name"
+                          class="p-2 hover:bg-gray-100 cursor-pointer"
+                          @click="selectProvince($event)"
+                        >
+                          {{ province.name }}
+                        </li>
+                      </div>
+                    </ul>
+                    <p class="absolute top-[70px] z-0 text-red-500 text-[12px]">
+                      {{ getError.provinceError }}
+                    </p>
+                  </div>
+                  <div class="relative mt-16 md:mt-0">
+                    <label for="district" class="block text-[12px] font-medium text-gray-700 mb-1"
+                      >Quận/huyện</label
+                    >
+
+                    <input
+                      type="text"
+                      class="absolute px-1 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-mainColor focus:border-mainColor z-10"
+                      v-model="districtInput"
+                      placeholder="Chọn quận, huyện"
+                      @focus="districtSelect = true"
+                      @input="searchDistrict($event)"
+                    />
+
+                    <ul
+                      v-if="districtSelect && provinceInput"
+                      class="w-full overflow-y-auto absolute top-[calc(100%+50px)] left-0 bg-white border border-gray-50 shadow districtSelect z-50"
+                      :class="!districtFilter ? 'h-[200px]' : 'h-fit'"
+                    >
+                      <div v-if="districtFilter" class="max-h-fit">
+                        <li
+                          v-for="(p, index) in districtFilter"
+                          :key="index"
+                          :name="p.name"
+                          class="p-2 hover:bg-gray-100 cursor-pointer"
+                          @click="selectDistrict($event)"
+                        >
+                          {{ p.name }}
+                        </li>
+                      </div>
+                      <div v-else>
+                        <li
+                          v-for="(district, index) in getDistrict"
+                          :key="index"
+                          :name="district.name"
+                          class="p-2 hover:bg-gray-100 cursor-pointer"
+                          @click="selectDistrict($event)"
+                        >
+                          {{ district.name }}
+                        </li>
+                      </div>
+                    </ul>
+                    <p class="absolute top-[70px] z-0 text-red-500 text-[12px]">
+                      {{ getError.districtError }}
+                    </p>
+                  </div>
+                  <div class="relative mt-16 md:mt-0">
+                    <label for="ward" class="block text-[12px] font-medium text-gray-700 mb-1"
+                      >Phường/xã</label
+                    >
+                    <input
+                      type="text"
+                      class="absolute px-1 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-mainColor focus:border-mainColor z-10"
+                      v-model="wardInput"
+                      placeholder="Chọn quận, huyện"
+                      @focus="wardSelect = true"
+                      @input="searchWard($event)"
+                    />
+
+                    <ul
+                      v-if="wardSelect && provinceInput"
+                      class="w-full overflow-y-auto absolute top-[calc(100%+50px)] left-0 bg-white border border-gray-50 shadow wardSelect z-50"
+                      :class="!wardFilter ? 'h-[200px]' : 'h-fit'"
+                    >
+                      <div v-if="wardFilter" class="max-h-fit">
+                        <li
+                          v-for="(p, index) in wardFilter"
+                          :key="index"
+                          :name="p.name"
+                          class="p-2 hover:bg-gray-100 cursor-pointer"
+                          @click="selectWard($event)"
+                        >
+                          {{ p.name }}
+                        </li>
+                      </div>
+                      <div v-else>
+                        <li
+                          v-for="(ward, index) in getWard"
+                          :key="index"
+                          :name="ward.name"
+                          class="p-2 hover:bg-gray-100 cursor-pointer"
+                          @click="selectWard($event)"
+                        >
+                          {{ ward.name }}
+                        </li>
+                      </div>
+                    </ul>
+                    <p class="absolute top-[70px] z-0 text-red-500 text-[12px]">
+                      {{ getError.wardError }}
+                    </p>
+                  </div>
+                </div>
+
+                <div class="pt-14">
+                  <label for="address" class="block text-[12px] font-medium text-gray-700 mb-1"
+                    >Địa chỉ</label
                   >
                   <input
                     type="text"
-                    id="phone"
-                    v-model="phone"
+                    id="address"
+                    v-model="addressPath"
                     class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-mainColor focus:border-mainColor"
                   />
-                  <p class="text-red-500 text-[12px]">{{ getError.phoneError }}</p>
-                </div>
-              </div>
-
-              <div>
-                <label for="email" class="block text-[12px] font-medium text-gray-700 mb-1"
-                  >Email</label
-                >
-                <input
-                  type="email"
-                  id="email"
-                  v-model="email"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-mainColor focus:border-mainColor"
-                />
-                <p class="text-red-500 text-[12px]">{{ getError.emailError }}</p>
-              </div>
-
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:pb-4">
-                <div class="relative mt-16 md:mt-0">
-                  <label for="city" class="block text-[12px] font-medium text-gray-700 mb-1"
-                    >Tỉnh/Thành phố</label
-                  >
-                  <input
-                    type="text"
-                    class="absolute px-1 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-mainColor focus:border-mainColor z-10"
-                    v-model="provinceInput"
-                    placeholder="Chọn tỉnh/thành phố"
-                    @focus="provinceSelect = true"
-                    @input="searchProvince($event)"
-                  />
-
-                  <ul
-                    v-if="provinceSelect"
-                    class="w-full overflow-y-auto absolute top-[calc(100%+50px)] left-0 bg-white border border-gray-50 shadow provinceSelect z-50"
-                    :class="!provinceFilter ? 'h-[200px]' : 'h-fit'"
-                  >
-                    <div v-if="provinceFilter" class="max-h-fit">
-                      <li
-                        v-for="(p, index) in provinceFilter"
-                        :key="index"
-                        :name="p.name"
-                        class="p-2 hover:bg-gray-100 cursor-pointer"
-                        @click="selectProvince($event)"
-                      >
-                        {{ p.name }}
-                      </li>
-                    </div>
-                    <div v-else>
-                      <li
-                        v-for="(province, index) in addresses"
-                        :key="index"
-                        :name="province.name"
-                        class="p-2 hover:bg-gray-100 cursor-pointer"
-                        @click="selectProvince($event)"
-                      >
-                        {{ province.name }}
-                      </li>
-                    </div>
-                  </ul>
-                  <p class="absolute top-[70px] z-0 text-red-500 text-[12px]">
-                    {{ getError.provinceError }}
+                  <p class="z-0 text-red-500 text-[12px]">
+                    {{ getError.addressError }}
                   </p>
                 </div>
-                <div class="relative mt-16 md:mt-0">
-                  <label for="district" class="block text-[12px] font-medium text-gray-700 mb-1"
-                    >Quận/huyện</label
-                  >
 
+                <div class="flex items-center gap-2">
                   <input
-                    type="text"
-                    class="absolute px-1 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-mainColor focus:border-mainColor z-10"
-                    v-model="districtInput"
-                    placeholder="Chọn quận, huyện"
-                    @focus="districtSelect = true"
-                    @input="searchDistrict($event)"
+                    type="checkbox"
+                    id="default"
+                    v-model="isDefault"
+                    class="w-4 h-4 text-mainColor border-gray-300 rounded focus:ring-mainColor"
                   />
-
-                  <ul
-                    v-if="districtSelect && provinceInput"
-                    class="w-full overflow-y-auto absolute top-[calc(100%+50px)] left-0 bg-white border border-gray-50 shadow districtSelect z-50"
-                    :class="!districtFilter ? 'h-[200px]' : 'h-fit'"
+                  <label for="default" class="text-[12px] text-gray-700"
+                    >Đặt làm địa chỉ mặc định</label
                   >
-                    <div v-if="districtFilter" class="max-h-fit">
-                      <li
-                        v-for="(p, index) in districtFilter"
-                        :key="index"
-                        :name="p.name"
-                        class="p-2 hover:bg-gray-100 cursor-pointer"
-                        @click="selectDistrict($event)"
-                      >
-                        {{ p.name }}
-                      </li>
-                    </div>
-                    <div v-else>
-                      <li
-                        v-for="(district, index) in getDistrict"
-                        :key="index"
-                        :name="district.name"
-                        class="p-2 hover:bg-gray-100 cursor-pointer"
-                        @click="selectDistrict($event)"
-                      >
-                        {{ district.name }}
-                      </li>
-                    </div>
-                  </ul>
-                  <p class="absolute top-[70px] z-0 text-red-500 text-[12px]">
-                    {{ getError.districtError }}
-                  </p>
                 </div>
-                <div class="relative mt-16 md:mt-0">
-                  <label for="ward" class="block text-[12px] font-medium text-gray-700 mb-1"
-                    >Phường/xã</label
-                  >
-                  <input
-                    type="text"
-                    class="absolute px-1 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-mainColor focus:border-mainColor z-10"
-                    v-model="wardInput"
-                    placeholder="Chọn quận, huyện"
-                    @focus="wardSelect = true"
-                    @input="searchWard($event)"
-                  />
 
-                  <ul
-                    v-if="wardSelect && provinceInput"
-                    class="w-full overflow-y-auto absolute top-[calc(100%+50px)] left-0 bg-white border border-gray-50 shadow wardSelect z-50"
-                    :class="!wardFilter ? 'h-[200px]' : 'h-fit'"
+                <div class="flex justify-end pt-4">
+                  <button
+                    v-if="pathType === 'create'"
+                    type="submit"
+                    @click="handleCreateAddress"
+                    class="px-6 py-2 bg-mainColor text-white rounded-md hover:bg-opacity-90 transition-all"
                   >
-                    <div v-if="wardFilter" class="max-h-fit">
-                      <li
-                        v-for="(p, index) in wardFilter"
-                        :key="index"
-                        :name="p.name"
-                        class="p-2 hover:bg-gray-100 cursor-pointer"
-                        @click="selectWard($event)"
-                      >
-                        {{ p.name }}
-                      </li>
+                    <div v-if="isLoading" class="flex items-center gap-2">
+                      <div
+                        class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"
+                      ></div>
+                      <span>Đang lưu...</span>
                     </div>
-                    <div v-else>
-                      <li
-                        v-for="(ward, index) in getWard"
-                        :key="index"
-                        :name="ward.name"
-                        class="p-2 hover:bg-gray-100 cursor-pointer"
-                        @click="selectWard($event)"
-                      >
-                        {{ ward.name }}
-                      </li>
+                    <span v-else>Lưu thông tin</span>
+                  </button>
+                  <button
+                    type="submit"
+                    v-if="pathType === 'update'"
+                    @click="handleUpdateAddress"
+                    class="px-6 py-2 bg-mainColor text-white rounded-md hover:bg-opacity-90 transition-all"
+                  >
+                    <div v-if="isLoading" class="flex items-center gap-2">
+                      <div
+                        class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"
+                      ></div>
+                      <span>Đang lưu...</span>
                     </div>
-                  </ul>
-                  <p class="absolute top-[70px] z-0 text-red-500 text-[12px]">
-                    {{ getError.wardError }}
-                  </p>
+                    <span v-else>Sửa thông tin</span>
+                  </button>
                 </div>
-              </div>
-
-              <div class="pt-14">
-                <label for="address" class="block text-[12px] font-medium text-gray-700 mb-1"
-                  >Địa chỉ</label
-                >
-                <input
-                  type="text"
-                  id="address"
-                  v-model="addressPath"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-mainColor focus:border-mainColor"
-                />
-                <p class="z-0 text-red-500 text-[12px]">
-                  {{ getError.addressError }}
-                </p>
-              </div>
-
-              <div class="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  id="default"
-                  v-model="isDefault"
-                  class="w-4 h-4 text-mainColor border-gray-300 rounded focus:ring-mainColor"
-                />
-                <label for="default" class="text-[12px] text-gray-700"
-                  >Đặt làm địa chỉ mặc định</label
-                >
-              </div>
-
-              <div class="flex justify-end pt-4">
-                <button
-                  v-if="pathType === 'create'"
-                  type="submit"
-                  @click="handleCreateAddress"
-                  class="px-6 py-2 bg-mainColor text-white rounded-md hover:bg-opacity-90 transition-all"
-                >
-                  <div v-if="isLoading" class="flex items-center gap-2">
-                    <div
-                      class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"
-                    ></div>
-                    <span>Đang lưu...</span>
-                  </div>
-                  <span v-else>Lưu thông tin</span>
-                </button>
-                <button
-                  type="submit"
-                  v-if="pathType === 'update'"
-                  @click="handleUpdateAddress"
-                  class="px-6 py-2 bg-mainColor text-white rounded-md hover:bg-opacity-90 transition-all"
-                >
-                  <div v-if="isLoading" class="flex items-center gap-2">
-                    <div
-                      class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"
-                    ></div>
-                    <span>Đang lưu...</span>
-                  </div>
-                  <span v-else>Sửa thông tin</span>
-                </button>
-              </div>
-            </form>
+              </form>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </Transition>
   </div>
 </template>
 
@@ -482,8 +500,11 @@ const validate = () => {
 }
 const addressUpdateId = ref(null)
 const openModalUpdate = async (event) => {
+  if (isModalTransitioning.value) return // Ngăn double click
+
   const addressId = event.target.getAttribute('id')
   const address = addressUser.value.find((address) => address._id === addressId)
+  isModalTransitioning.value = true
   isModalOpen.value = true
   addressUpdateId.value = addressId
   name.value = address.full_name
@@ -498,8 +519,12 @@ const openModalUpdate = async (event) => {
   district.value = address.district
   ward.value = address.ward
 
-  //
   router.push({ query: { ...route.query, submit: 'update' } })
+
+  // Reset after transition
+  setTimeout(() => {
+    isModalTransitioning.value = false
+  }, 300)
 }
 
 const handleUpdateAddress = async () => {
@@ -534,31 +559,32 @@ const handleUpdateAddress = async () => {
             defaultAddress.is_default = response.data.data[0].is_default
           }
         }
-        if (response.data.data[1]) {
-          const editedAddress = addressUser.value.find(
-            (address) => address._id === response.data.data[1]._id,
-          )
-          if (editedAddress) {
-            editedAddress.name = response.data.data[1].name
-            editedAddress.phone = response.data.data[1].phone
-            editedAddress.email = response.data.data[1].email
-            editedAddress.address_line = response.data.data[1].address_line
-            editedAddress.province = response.data.data[1].province
-            editedAddress.district = response.data.data[1].district
-            editedAddress.ward = response.data.data[1].ward
-            editedAddress.is_default = response.data.data[1].is_default
-          }
-        }
-        $toast.success('Cập nhật địa chỉ thành công', {
-          position: 'top-right',
-          duration: 1000,
-        })
+        // if (response.data.data[1]) {
+        //   const editedAddress = addressUser.value.find(
+        //     (address) => address._id === response.data.data[1]._id,
+        //   )
+        //   if (editedAddress) {
+        //     editedAddress.name = response.data.data[1].name
+        //     editedAddress.phone = response.data.data[1].phone
+        //     editedAddress.email = response.data.data[1].email
+        //     editedAddress.address_line = response.data.data[1].address_line
+        //     editedAddress.province = response.data.data[1].province
+        //     editedAddress.district = response.data.data[1].district
+        //     editedAddress.ward = response.data.data[1].ward
+        //     editedAddress.is_default = response.data.data[1].is_default
+        //   }
+        // }
 
         addressUser.value = addressUser.value.map((address) =>
           address._id === response.data.data[1]._id ? response.data.data[1] : address,
         )
         authStore.user.address = addressUser.value
         addressStore.setAddress(addressUser.value)
+
+        $toast.success('Cập nhật địa chỉ thành công', {
+          position: 'top-right',
+          duration: 1000,
+        })
       }
     }
   } catch (error) {
@@ -631,7 +657,7 @@ const handleCreateAddress = async () => {
         authStore.user.address = addressUser.value
         setTimeout(() => {
           closeModal()
-        }, 2000)
+        }, 500)
       }
     } catch (error) {
       isLoading.value = false
@@ -703,10 +729,19 @@ const searchWard = (event) => {
   }, 500)
 }
 
+const isModalTransitioning = ref(false)
+
 const openModal = () => {
+  if (isModalTransitioning.value) return // Ngăn double click
+  isModalTransitioning.value = true
   isModalOpen.value = true
-  document.body.style.overflow = 'hidden' // Ngăn cuộn trang
+  document.body.style.overflow = 'hidden'
   router.push({ query: { ...route.query, submit: 'create' } })
+
+  // Reset after transition
+  setTimeout(() => {
+    isModalTransitioning.value = false
+  }, 300)
 }
 
 const resetModal = () => {
@@ -730,23 +765,21 @@ const resetModal = () => {
 }
 
 const closeModal = () => {
+  isModalTransitioning.value = true
   isModalOpen.value = false
-  document.body.style.overflow = 'auto' // Cho phép cuộn trang trở lại
+  document.body.style.overflow = 'auto'
   resetModal()
+
+  // Reset after close transition
+  setTimeout(() => {
+    isModalTransitioning.value = false
+  }, 300)
 }
 
 const closeModalOnOverlay = (event) => {
-  // Chỉ đóng khi click vào overlay
-  const modalContainer = document.querySelector('.modal-container')
-  const provinceSelect = document.querySelector('.provinceSelect')
-  if (
-    modalContainer &&
-    provinceSelect &&
-    !modalContainer.contains(event.target) &&
-    !provinceSelect.contains(event.target)
-  ) {
+  // Chỉ đóng modal khi click trực tiếp vào overlay (background)
+  if (event.target.classList.contains('modal-overlay')) {
     closeModal()
-    provinceSelect.value = false
   }
 }
 
@@ -803,3 +836,172 @@ onUnmounted(() => {
   document.body.style.overflow = 'auto'
 })
 </script>
+
+<style scoped>
+/* Modal transition styles */
+.modal-enter-active {
+  transition: all 0.3s ease-out;
+}
+
+.modal-leave-active {
+  transition: all 0.3s ease-in;
+}
+
+.modal-enter-from {
+  opacity: 0;
+}
+
+.modal-leave-to {
+  opacity: 0;
+}
+
+.modal-enter-active .modal-backdrop {
+  transition: opacity 0.3s ease-out;
+}
+
+.modal-leave-active .modal-backdrop {
+  transition: opacity 0.3s ease-in;
+}
+
+.modal-enter-from .modal-backdrop {
+  opacity: 0;
+}
+
+.modal-leave-to .modal-backdrop {
+  opacity: 0;
+}
+
+.modal-enter-active .modal-content {
+  transition: all 0.3s ease-out;
+}
+
+.modal-leave-active .modal-content {
+  transition: all 0.3s ease-in;
+}
+
+.modal-enter-from .modal-content {
+  opacity: 0;
+  transform: scale(0.9) translateY(-10px);
+}
+
+.modal-leave-to .modal-content {
+  opacity: 0;
+  transform: scale(0.95) translateY(10px);
+}
+
+/* Button styles - Ngăn conflict với modal transition */
+.add-address-btn {
+  will-change: auto;
+  transform: translateZ(0);
+}
+
+.add-address-btn:hover {
+  transform: translateZ(0);
+}
+
+/* Dropdown select styling */
+.provinceSelect,
+.districtSelect,
+.wardSelect {
+  border-radius: 8px;
+  box-shadow:
+    0 10px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e5e7eb;
+  max-height: 200px;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f1f5f9;
+}
+
+/* Custom scrollbar for webkit browsers */
+.provinceSelect::-webkit-scrollbar,
+.districtSelect::-webkit-scrollbar,
+.wardSelect::-webkit-scrollbar {
+  width: 6px;
+}
+
+.provinceSelect::-webkit-scrollbar-track,
+.districtSelect::-webkit-scrollbar-track,
+.wardSelect::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 10px;
+}
+
+.provinceSelect::-webkit-scrollbar-thumb,
+.districtSelect::-webkit-scrollbar-thumb,
+.wardSelect::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+  transition: background 0.2s ease;
+}
+
+.provinceSelect::-webkit-scrollbar-thumb:hover,
+.districtSelect::-webkit-scrollbar-thumb:hover,
+.wardSelect::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Dropdown items styling */
+.provinceSelect li,
+.districtSelect li,
+.wardSelect li {
+  padding: 12px 16px;
+  transition: background-color 0.15s ease;
+  border-bottom: 1px solid #f3f4f6;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.provinceSelect li:last-child,
+.districtSelect li:last-child,
+.wardSelect li:last-child {
+  border-bottom: none;
+}
+
+.provinceSelect li:hover,
+.districtSelect li:hover,
+.wardSelect li:hover {
+  background-color: #f8fafc;
+  color: #1f2937;
+}
+
+.provinceSelect li:active,
+.districtSelect li:active,
+.wardSelect li:active {
+  background-color: #e2e8f0;
+}
+
+/* Smooth scrolling */
+.provinceSelect,
+.districtSelect,
+.wardSelect {
+  scroll-behavior: smooth;
+}
+
+/* Animation for dropdown appearance */
+.provinceSelect,
+.districtSelect,
+.wardSelect {
+  animation: dropdownFadeIn 0.2s ease-out;
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Focus states for better accessibility */
+.provinceSelect li:focus,
+.districtSelect li:focus,
+.wardSelect li:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: -2px;
+  background-color: #eff6ff;
+}
+</style>

@@ -4,7 +4,7 @@
       type="text"
       v-model="searchQuery"
       placeholder="Tìm sản phẩm..."
-      class="w-10/12 lg:w-11/12 bg-white outline-0 p-2 rounded-l-[4px]"
+      class="w-10/12 lg:w-11/12 bg-white outline-0 px-2 h-[40px] rounded-l-[4px]"
       @focus="showSuggestions"
       @blur="hideSuggestions"
       @input="debouncedSearch"

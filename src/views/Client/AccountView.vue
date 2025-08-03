@@ -33,6 +33,13 @@
                 Đơn hàng của bạn
               </router-link>
               <router-link
+                :to="{ path: '/account', query: { type: 'reviews' } }"
+                class="text-[#212B25] font-normal hover:text-hover cursor-pointer mb-4 block"
+                :class="{ 'text-hover font-medium': currentType === 'reviews' }"
+              >
+                Đánh giá
+              </router-link>
+              <router-link
                 :to="{ path: '/account', query: { type: 'password' } }"
                 class="text-[#212B25] font-normal hover:text-hover cursor-pointer mb-4 block"
                 :class="{ 'text-hover font-medium': currentType === 'password' }"
@@ -66,6 +73,7 @@ import AccountInfo from '@/components/Body/Account/AccountInfo.vue'
 import AccountOrder from '@/components/Body/Account/AccountOrder.vue'
 import ChangePassword from '@/components/Body/Account/ChangePassword.vue'
 import AccountAddress from '@/components/Body/Account/AccountAddress.vue'
+import AccountReview from '@/components/Body/Account/AccountReview.vue'
 const router = useRouter()
 const route = useRoute()
 const authStore = useAuthStore()
@@ -86,6 +94,8 @@ const currentComponent = computed(() => {
       return ChangePassword
     case 'address':
       return AccountAddress
+    case 'reviews':
+      return AccountReview
     default:
       return AccountInfo
   }

@@ -47,7 +47,7 @@
             <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
             Đang gửi...
           </span>
-          <span v-else>Gửi OTP lại mật khẩu</span>
+          <span v-else>Gửi OTP đặt lại mật khẩu</span>
         </button>
 
         <div class="text-center mt-4">

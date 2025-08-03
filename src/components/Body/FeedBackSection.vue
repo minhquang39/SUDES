@@ -1,5 +1,5 @@
 <template>
-  <div class="py-8 mb-60">
+  <div class="py-8 mb-10">
     <div class="text-center pt-[30px] bg-section relative -mx-[7px] md:-mx-[45px] xl:-mx-30">
       <div>
         <div class="z-10 relative">

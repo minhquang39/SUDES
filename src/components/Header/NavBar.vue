@@ -24,39 +24,20 @@
               v-if="categories.length > 0"
               class="w-full h-max bg-white border border-black relative navbar_category"
             >
-              <li
+              <router-link
                 v-for="(parentCategory, index) in categories"
                 :key="index"
                 class="group flex items-center justify-between p-1 border border-[#eee] cursor-pointer"
+                :to="`/danh-muc/${parentCategory.slug}`"
               >
                 <div class="flex">
-                  <span class="group-hover:font-medium text-[#333] group-hover:text-[#fdc97d]">{{
-                    parentCategory.name
-                  }}</span>
+                  <span
+                    class="group-hover:font-medium text-[#333] group-hover:text-[#fdc97d] group-hover:cursor-pointer text-base pl-2"
+                    >{{ parentCategory.name }}</span
+                  >
                 </div>
-                <ChevronRightIcon v-if="parentCategory.children.length > 0" class="size-5" />
-
-                <div
-                  v-if="parentCategory.children.length > 0"
-                  class="absolute hidden group-hover:block left-full top-0 md:w-[calc(100vw-360px)] xl:w-[calc(100vw-540px)] bg-white border border-black z-[999] transition-all duration-300 ease-in-out p-3"
-                  style="height: 400px"
-                >
-                  <div class="grid grid-cols-12">
-                    <div
-                      v-for="(subCategory, index) in parentCategory.children"
-                      :key="index"
-                      class="col-span-4"
-                    >
-                      <div
-                        class="font-medium text-nor text-[#666] hover:text-[#fdc97d] mb-2 flex items-center"
-                      >
-                        <TwoSquare class="block mr-3" size="7" />
-                        {{ subCategory.name }}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </li>
+                <!-- <ChevronRightIcon v-if="parentCategory.children.length > 0" class="size-5" /> -->
+              </router-link>
             </ul>
           </div>
         </div>

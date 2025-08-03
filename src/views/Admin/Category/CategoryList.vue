@@ -1,6 +1,6 @@
 <template>
   <div class="">
-    <div class="flex justify-between items-center">
+    <div class="flex justify-between items-center mb-10">
       <h1 class="text-2xl font-bold text-textColor">Quản lý danh mục</h1>
       <button
         @click="handleAddCategory"
@@ -169,7 +169,6 @@ const handleAddCategory = () => {
 }
 const handleEditCategory = (id) => {
   router.push({ path: '/admin/dashboard/category/add', query: { type: 'update', id: id } })
-  // router.push(`/admin/dashboard/category/edit/${id}`)
   console.log(id)
 }
 

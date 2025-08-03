@@ -1,224 +1,102 @@
 <template>
-  <div style="padding: 1.5rem">
-    <h1 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1.5rem">Dashboard</h1>
-    <div
-      style="
-        display: flex;
-        gap: 1.5rem;
-        overflow-x: auto;
-        padding-bottom: 1rem;
-        margin-bottom: 2rem;
-      "
-    >
-      <div
-        class="stat-card"
-        style="
-          min-width: 250px;
-          background-color: #ffffff;
-          border-radius: 0.5rem;
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
-          padding: 1.25rem;
-          display: flex;
-          align-items: center;
-        "
-      >
+  <div class="p-6">
+    <h1 class="text-2xl font-semibold mb-6">Dashboard</h1>
+
+    <!-- Statistics Cards -->
+    <div class="flex gap-6 overflow-x-auto pb-4 mb-8">
+      <!-- Products Card -->
+      <div class="stat-card min-w-[250px] bg-white rounded-lg shadow-sm p-5 flex items-center">
         <div
-          style="
-            width: 3.5rem;
-            height: 3.5rem;
-            border-radius: 50%;
-            background-color: #ecfdf5;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 1rem;
-            color: #10b981;
-          "
+          class="w-14 h-14 rounded-full bg-green-50 flex items-center justify-center mr-4 text-green-500"
         >
           <n-icon size="24">
             <BagHandleOutline />
           </n-icon>
         </div>
-        <div style="flex: 1">
-          <h3 style="font-size: 0.875rem; color: #6b7280; font-weight: 500; margin-bottom: 0.25rem">
-            Products
-          </h3>
-          <div style="font-size: 1.5rem; font-weight: 700; color: #1f2937">
+        <div class="flex-1">
+          <h3 class="text-sm text-gray-500 font-medium mb-1">Products</h3>
+          <div class="text-2xl font-bold text-gray-900">
             <count-up :end-val="statistics.products" :duration="2.5" />
           </div>
         </div>
       </div>
 
-      <div
-        class="stat-card"
-        style="
-          min-width: 250px;
-          background-color: #ffffff;
-          border-radius: 0.5rem;
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
-          padding: 1.25rem;
-          display: flex;
-          align-items: center;
-        "
-      >
+      <!-- Users Card -->
+      <div class="stat-card min-w-[250px] bg-white rounded-lg shadow-sm p-5 flex items-center">
         <div
-          style="
-            width: 3.5rem;
-            height: 3.5rem;
-            border-radius: 50%;
-            background-color: #f5f3ff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 1rem;
-            color: #8b5cf6;
-          "
+          class="w-14 h-14 rounded-full bg-purple-50 flex items-center justify-center mr-4 text-purple-500"
         >
           <n-icon size="24">
             <PeopleOutline />
           </n-icon>
         </div>
-        <div style="flex: 1">
-          <h3 style="font-size: 0.875rem; color: #6b7280; font-weight: 500; margin-bottom: 0.25rem">
-            Users
-          </h3>
-          <div style="font-size: 1.5rem; font-weight: 700; color: #1f2937">
+        <div class="flex-1">
+          <h3 class="text-sm text-gray-500 font-medium mb-1">Users</h3>
+          <div class="text-2xl font-bold text-gray-900">
             <count-up :end-val="statistics.users" :duration="2.5" />
           </div>
         </div>
       </div>
 
-      <div
-        class="stat-card"
-        style="
-          min-width: 250px;
-          background-color: #ffffff;
-          border-radius: 0.5rem;
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
-          padding: 1.25rem;
-          display: flex;
-          align-items: center;
-        "
-      >
+      <!-- Orders Card -->
+      <div class="stat-card min-w-[250px] bg-white rounded-lg shadow-sm p-5 flex items-center">
         <div
-          style="
-            width: 3.5rem;
-            height: 3.5rem;
-            border-radius: 50%;
-            background-color: #fefce8;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 1rem;
-            color: #eab308;
-          "
+          class="w-14 h-14 rounded-full bg-yellow-50 flex items-center justify-center mr-4 text-yellow-500"
         >
           <n-icon size="24">
             <BagOutline />
           </n-icon>
         </div>
-        <div style="flex: 1">
-          <h3 style="font-size: 0.875rem; color: #6b7280; font-weight: 500; margin-bottom: 0.25rem">
-            Orders
-          </h3>
-          <div style="font-size: 1.5rem; font-weight: 700; color: #1f2937">
+        <div class="flex-1">
+          <h3 class="text-sm text-gray-500 font-medium mb-1">Orders</h3>
+          <div class="text-2xl font-bold text-gray-900">
             <count-up :end-val="statistics.orders" :duration="2.5" />
           </div>
         </div>
       </div>
 
-      <div
-        class="stat-card"
-        style="
-          min-width: 250px;
-          background-color: #ffffff;
-          border-radius: 0.5rem;
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
-          padding: 1.25rem;
-          display: flex;
-          align-items: center;
-        "
-      >
+      <!-- Revenue Card -->
+      <div class="stat-card min-w-[250px] bg-white rounded-lg shadow-sm p-5 flex items-center">
         <div
-          style="
-            width: 3.5rem;
-            height: 3.5rem;
-            border-radius: 50%;
-            background-color: #f0fdf4;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 1rem;
-            color: #22c55e;
-          "
+          class="w-14 h-14 rounded-full bg-green-100 flex items-center justify-center mr-4 text-green-600"
         >
           <n-icon size="24">
             <CashOutline />
           </n-icon>
         </div>
-        <div style="flex: 1">
-          <h3 style="font-size: 0.875rem; color: #6b7280; font-weight: 500; margin-bottom: 0.25rem">
-            Revenue
-          </h3>
-          <div style="font-size: 1.5rem; font-weight: 700; color: #1f2937">
+        <div class="flex-1">
+          <h3 class="text-sm text-gray-500 font-medium mb-1">Revenue</h3>
+          <div class="text-2xl font-bold text-gray-900">
             {{ formatRevenue(statistics.revenue) }}
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Biểu đồ thống kê -->
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem">
-      <!-- Biểu đồ đơn hàng theo thời gian -->
-      <div
-        style="
-          background-color: #ffffff;
-          border-radius: 0.5rem;
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
-          padding: 1.25rem;
-        "
-      >
-        <div
-          style="
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-          "
-        >
-          <h3 style="font-size: 1rem; font-weight: 600; color: #374151">Orders Over Time</h3>
+    <!-- Charts Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+      <!-- Orders Over Time Chart -->
+      <div class="bg-white rounded-lg shadow-sm p-5">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-base font-semibold text-gray-700">Orders Over Time</h3>
           <n-select
             v-model:value="orderPeriod"
             :options="periodOptions"
-            style="width: 120px"
+            class="w-30"
             @update:value="fetchOrderStats"
           />
         </div>
         <v-chart class="chart" :option="orderChartOption" autoresize />
       </div>
 
-      <!-- Biểu đồ doanh thu theo thời gian -->
-      <div
-        style="
-          background-color: #ffffff;
-          border-radius: 0.5rem;
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
-          padding: 1.25rem;
-        "
-      >
-        <div
-          style="
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-          "
-        >
-          <h3 style="font-size: 1rem; font-weight: 600; color: #374151">Revenue Over Time</h3>
+      <!-- Revenue Over Time Chart -->
+      <div class="bg-white rounded-lg shadow-sm p-5">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-base font-semibold text-gray-700">Revenue Over Time</h3>
           <n-select
             v-model:value="revenuePeriod"
             :options="periodOptions"
-            style="width: 120px"
+            class="w-30"
             @update:value="fetchOrderStats"
           />
         </div>
@@ -226,83 +104,49 @@
       </div>
     </div>
 
-    <!-- Biểu đồ phân phối đơn hàng -->
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem">
-      <!-- Biểu đồ đơn hàng theo trạng thái -->
-      <div
-        style="
-          background-color: #ffffff;
-          border-radius: 0.5rem;
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
-          padding: 1.25rem;
-        "
-      >
-        <h3 style="font-size: 1rem; font-weight: 600; margin-bottom: 1rem; color: #374151">
-          Orders by Status
-        </h3>
-        <v-chart class="chart" :option="orderStatusChartOption" autoresize />
+    <!-- Distribution Charts -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+      <!-- Orders by Status -->
+      <div class="bg-white rounded-lg shadow-sm p-5">
+        <h3 class="text-base font-semibold mb-4 text-gray-700">Orders by Status</h3>
+        <v-chart class="chart-pie" :option="orderStatusChartOption" autoresize />
       </div>
 
-      <!-- Biểu đồ đơn hàng theo phương thức thanh toán -->
-      <div
-        style="
-          background-color: #ffffff;
-          border-radius: 0.5rem;
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
-          padding: 1.25rem;
-        "
-      >
-        <h3 style="font-size: 1rem; font-weight: 600; margin-bottom: 1rem; color: #374151">
-          Orders by Payment Method
-        </h3>
-        <v-chart class="chart" :option="paymentMethodChartOption" autoresize />
+      <!-- Orders by Payment Method -->
+      <div class="bg-white rounded-lg shadow-sm p-5">
+        <h3 class="text-base font-semibold mb-4 text-gray-700">Orders by Payment Method</h3>
+        <v-chart class="chart-pie" :option="paymentMethodChartOption" autoresize />
       </div>
     </div>
 
-    <!-- Sản phẩm mới nhất -->
-    <div
-      style="
-        background-color: #ffffff;
-        border-radius: 0.5rem;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
-        padding: 1.25rem;
-        margin-bottom: 2rem;
-      "
-    >
-      <h3 style="font-size: 1rem; font-weight: 600; margin-bottom: 1rem; color: #374151">
-        Latest Products
-      </h3>
-      <div style="overflow-x: auto">
-        <table style="width: 100%; border-collapse: collapse">
+    <!-- Latest Products Table -->
+    <div class="bg-white rounded-lg shadow-sm p-5 mb-8">
+      <h3 class="text-base font-semibold mb-4 text-gray-700">Latest Products</h3>
+      <div class="overflow-x-auto">
+        <table class="w-full border-collapse">
           <thead>
-            <tr style="border-bottom: 1px solid #e5e7eb">
-              <th style="text-align: left; padding: 0.75rem; font-weight: 500; color: #6b7280">
-                Image
-              </th>
-              <th style="text-align: left; padding: 0.75rem; font-weight: 500; color: #6b7280">
-                Name
-              </th>
+            <tr class="border-b border-gray-200">
+              <th class="text-left py-3 px-0 font-medium text-gray-500">Image</th>
+              <th class="text-left py-3 px-0 font-medium text-gray-500">Name</th>
             </tr>
           </thead>
           <tbody>
             <tr
               v-for="product in latestProducts"
               :key="product._id"
-              style="border-bottom: 1px solid #e5e7eb"
+              class="border-b border-gray-200"
             >
-              <td style="padding: 0.75rem; width: 60px">
+              <td class="py-3 w-[60px]">
                 <img
                   :src="product.images[0]"
                   alt="Product"
-                  style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px"
+                  class="w-[50px] h-[50px] object-cover rounded"
                 />
               </td>
-              <td style="padding: 0.75rem">{{ product.name }}</td>
+              <td class="py-3">{{ product.name }}</td>
             </tr>
             <tr v-if="latestProducts.length === 0">
-              <td colspan="2" style="padding: 1rem; text-align: center; color: #6b7280">
-                No products found
-              </td>
+              <td colspan="2" class="py-4 text-center text-gray-500">No products found</td>
             </tr>
           </tbody>
         </table>
@@ -518,7 +362,7 @@ export default {
             show: false,
           },
           data: [],
-          color: ['#10b981', '#ef4444', '#f59e0b'],
+          color: ['#10b981', '#ef4444', '#f59e0b', '#3b82f6'],
         },
       ],
     })
@@ -558,7 +402,6 @@ export default {
             show: false,
           },
           data: [],
-          color: ['#3b82f6', '#8b5cf6', '#f97316'],
         },
       ],
     })
@@ -600,10 +443,10 @@ export default {
         if (data.ordersByStatus) {
           // Định nghĩa màu sắc cho từng trạng thái
           const statusColors = {
-            completed: '#10b981', // green
-            pending: '#f59e0b', // amber
-            cancelled: '#ef4444', // red
-            processing: '#3b82f6', // blue
+            completed: '#10b981', //
+            pending: '#f59e0b', //
+            cancelled: '#ef4444', //
+            shipping: '#3b82f6',
           }
 
           const statusData = data.ordersByStatus.map((item) => {
@@ -611,6 +454,9 @@ export default {
             return {
               value: item.count,
               name: statusName,
+              itemStyle: {
+                color: statusColors[item._id] || '#999999',
+              },
             }
           })
 
@@ -707,7 +553,7 @@ export default {
 
 .stat-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
 .chart {
@@ -718,6 +564,12 @@ export default {
   height: 400px;
 }
 
+/* Custom width for select components */
+.w-30 {
+  width: 120px;
+}
+
+/* Responsive adjustments */
 @media (max-width: 768px) {
   .chart {
     height: 250px;
@@ -725,6 +577,17 @@ export default {
 
   .chart-pie {
     height: 300px;
+  }
+
+  /* Improve mobile stats cards layout */
+  .stat-card {
+    min-width: 280px;
+  }
+}
+
+@media (max-width: 640px) {
+  .stat-card {
+    min-width: 100%;
   }
 }
 </style>

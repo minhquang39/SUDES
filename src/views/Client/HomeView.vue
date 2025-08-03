@@ -45,14 +45,12 @@ const authStore = useAuthStore()
 const $toast = useToast()
 
 onMounted(async () => {
-  // Kiểm tra xem có token trong URL không
   const token = route.query.token
-  const type = route.query.type // Thêm type để phân biệt loại token
+  const type = route.query.type
 
   if (token) {
     try {
       if (type === 'reset-password') {
-        // Nếu là token reset password, chuyển đến trang reset password
         router.push({
           path: '/account/reset-password',
           query: { token },
@@ -73,7 +71,6 @@ onMounted(async () => {
         })
       }
 
-      // Xóa token khỏi URL để tránh lưu lại trong history
       const newUrl = window.location.pathname
       window.history.replaceState({}, document.title, newUrl)
     } catch (err) {

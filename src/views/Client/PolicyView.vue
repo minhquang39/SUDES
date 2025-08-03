@@ -1,9 +1,7 @@
 <template>
   <div class="bg-primaryBg py-2">
+    <BreadCrumb />
     <div class="lg:px-11 xl:px-30">
-      <!-- Bread cump  -->
-      <div class="my-2">Trang chủ > Chính sách mua hàng</div>
-
       <div v-if="loading">
         <PolicySkeleton />
       </div>
@@ -22,6 +20,7 @@ import { ref, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import apiClient from '@/utils/axios'
 import PolicySkeleton from '@/components/Skeleton/PolicySkeleton.vue'
+import BreadCrumb from '@/components/Body/BreadCrumb.vue'
 
 const route = useRoute()
 const policy = ref(null)

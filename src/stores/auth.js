@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { useCartStore } from './cart'
 import { useAddressStore } from './address'
+import { useRecentWatchStore } from './recentwatch'
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     token: localStorage.getItem('token') || null,
@@ -28,6 +29,9 @@ export const useAuthStore = defineStore('auth', {
       localStorage.removeItem('pendingEmail')
       localStorage.removeItem('cart')
       localStorage.removeItem('userAddresses')
+      localStorage.removeItem('recentWatched')
+      const recentWatchStore = useRecentWatchStore()
+      recentWatchStore.recentWatch = []
       const cartStore = useCartStore()
       cartStore.cart = []
       const addressStore = useAddressStore()
